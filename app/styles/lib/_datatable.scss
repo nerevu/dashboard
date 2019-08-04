@@ -1,0 +1,16 @@
+
+/* ----------------------------------------------- */
+/* ############### 4.21 DataTable ############### */
+/* ----------------------------------------------- */
+
+table.dataTable.dtr-inline.collapsed {
+  > tbody {
+    > tr[role="row"] > td:first-child::before {
+      border-width: 0;
+      box-shadow: none;
+      top: 15px;
+      left: 8px;
+      background-color: $gray-400;
+    }
+  }
+}

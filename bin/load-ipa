@@ -1,0 +1,14 @@
+#!/usr/bin/env bash -uo pipefail
+
+curl 'https://api.ipaserve.notofilter.space/ipa/v1/prisoner-arrests?page=0&size=128&sort=id,asc' | jq '.[:128]' > app/dev_data/ipa/arrests.json
+curl 'https://api.ipaserve.notofilter.space/ipa/v1/prisoner-sentence-behaviours?page=0&size=128&sort=id,asc' | jq '.[:128]' > app/dev_data/ipa/behaviours.json
+curl 'https://api.ipaserve.notofilter.space/ipa/v1/prisoner-charged-withs?page=0&size=128&sort=id,asc' | jq '.[:128]' > app/dev_data/ipa/charges.json
+curl 'https://api.ipaserve.notofilter.space/ipa/v1/prisoner-detentions?page=0&size=128&sort=id,asc' | jq '.[:128]' > app/dev_data/ipa/detentions.json
+curl 'https://api.ipaserve.notofilter.space/ipa/v1/files?page=0&size=128&sort=id,asc' | jq '.[:128]' > app/dev_data/ipa/files.json
+curl 'https://api.ipaserve.notofilter.space/ipa/v1/judges?page=0&size=128&sort=id,asc' | jq '.[:128]' > app/dev_data/ipa/judges.json
+curl 'https://api.ipaserve.notofilter.space/ipa/v1/prisoners?page=0&size=128&sort=id,asc' | jq '.[:128]' > app/dev_data/ipa/prisoners.json
+curl 'https://api.ipaserve.notofilter.space/ipa/v1/prisons?page=0&size=128&sort=id,asc' | jq '.[:128]' > app/dev_data/ipa/prisons.json
+curl 'https://api.ipaserve.notofilter.space/ipa/v1/quotes?page=0&size=128&sort=id,asc' | jq '.[:128]' > app/dev_data/ipa/quotes.json
+curl 'https://api.ipaserve.notofilter.space/ipa/v1/prisoner-sentences?page=0&size=128&sort=id,asc' | jq '.[:128]' > app/dev_data/ipa/sentences.json
+curl 'https://api.ipaserve.notofilter.space/ipa/v1/timelines?page=0&size=128&sort=id,asc' | jq '.[:128]' > app/dev_data/ipa/timelines.json
+curl 'https://api.ipaserve.notofilter.space/ipa/v1/prisoner-prison-treatments?page=0&size=128&sort=id,asc' | jq '.[:128]' > app/dev_data/ipa/treatments.json

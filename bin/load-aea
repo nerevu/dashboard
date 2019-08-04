@@ -1,0 +1,12 @@
+#!/usr/bin/env bash -uo pipefail
+
+curl 'https://api.ipaserve.notofilter.space/aea/v1/report-sentence-behaviours?page=0&size=128&sort=id,asc' | jq '.[:128]' > app/dev_data/aea/behaviours.json
+curl 'https://api.ipaserve.notofilter.space/aea/v1/report-detentions?page=0&size=128&sort=id,asc' | jq '.[:128]' > app/dev_data/aea/detentions.json
+curl 'https://api.ipaserve.notofilter.space/aea/v1/files?page=0&size=128&sort=id,asc' | jq '.[:128]' > app/dev_data/aea/files.json
+curl 'https://api.ipaserve.notofilter.space/aea/v1/judges?page=0&size=128&sort=id,asc' | jq '.[:128]' > app/dev_data/aea/judges.json
+curl 'https://api.ipaserve.notofilter.space/aea/v1/reports?page=0&size=128&sort=id,asc' | jq '.[:128]' > app/dev_data/aea/reports.json
+curl 'https://api.ipaserve.notofilter.space/aea/v1/prisons?page=0&size=128&sort=id,asc' | jq '.[:128]' > app/dev_data/aea/prisons.json
+curl 'https://api.ipaserve.notofilter.space/aea/v1/quotes?page=0&size=128&sort=id,asc' | jq '.[:128]' > app/dev_data/aea/quotes.json
+curl 'https://api.ipaserve.notofilter.space/aea/v1/report-sentences?page=0&size=128&sort=id,asc' | jq '.[:128]' > app/dev_data/aea/sentences.json
+curl 'https://api.ipaserve.notofilter.space/aea/v1/timelines?page=0&size=128&sort=id,asc' | jq '.[:128]' > app/dev_data/aea/timelines.json
+curl 'https://api.ipaserve.notofilter.space/aea/v1/report-prison-treatments?page=0&size=128&sort=id,asc' | jq '.[:128]' > app/dev_data/aea/treatments.json
