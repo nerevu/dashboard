@@ -18,7 +18,7 @@
     "watch": "brunch watch",
     "lint": "coffeelint *.coffee && coffeelint app/**/*.coffee",
     "start": "brunch watch --server",
-    "start:prod": "node server",
+    "start:prod": "coffee server.coffee",
     "build": "brunch build || echo 'error building project'",
     "build:prod": "brunch build --production || echo 'error building project'",
     "postinstall": "npm run build",
