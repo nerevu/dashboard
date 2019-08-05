@@ -14,10 +14,8 @@ config = require("./app/config")
 devconfig = require("./app/devconfig")
 
 port = 3333
-
-
-maxCacheAge = devconfig.time.cache * 60 * 1000 # page cache (in ms)
-svTimeout = devconfig.time.timeout * 1000 # server timeout (in ms)
+maxCacheAge = devconfig.time.cache * 60 * 1000  # page cache (in ms)
+svTimeout = devconfig.time.timeout * 1000  # server timeout (in ms)
 
 transports = [
   new winston.transports.Console colorize: true
@@ -47,7 +45,6 @@ if devconfig.enable.logger.local
   transports.push(new winston.transports.File options)
 
 logger = winston.createLogger transports: transports
-
 
 logError = (err, src, error=true) ->
   logFun = if error then logger.error else logger.warn
