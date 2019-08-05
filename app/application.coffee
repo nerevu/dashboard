@@ -27,7 +27,6 @@ module.exports =
   oncreate: (vnode) ->
     helpers.log 'creating app'
     ctrl = vnode.state.ctrl
-    ctrl.addListeners()
 
   onbeforeupdate: (vnode) ->
     console.log 'onbeforeupdate app'
@@ -35,10 +34,5 @@ module.exports =
   onupdate: (vnode) ->
     console.log 'onupdate app'
     ctrl = vnode.state.ctrl
-
-    if ctrl.loaded()
-      ctrl.initalizePlugins()
-
-    ctrl.updateSiteMeta()
 
   view: view

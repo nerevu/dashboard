@@ -1,9 +1,19 @@
 module.exports = class Metric
   constructor: (metric) ->
-    @id = metric.id
-    @background = metric.background
-    @image = metric.image
-    @title = metric.title
-    @description = metric.description
-    @price = metric.price
-    @category = metric.category
+    # @id = metric.id
+    @paid = metric.Paid
+    @invoice_number = metric["Invoice Number"]
+    @contract_number = metric["Contract Number"]
+    # @invoice_source = metric["Invoice Source"]
+    @invoice_amount = metric["Invoice Amount"]
+    # @cost_of_goods = metric["Cost of Goods"]
+    @profit = metric.Profit
+    @commission = metric.Commission
+    @invoice_date = metric["Invoice Date"]
+    # @invoice_month_num = metric["Invoice Month Num"]
+    # @invoice_month = metric["Invoice Month"]
+    # @invoice_period = metric["Invoice Period"]
+    @po_numbers = metric["PO Numbers"]
+    # @missing_pos = metric["Missing POs"]
+    @sales_rep = metric["Sales Rep"]
+    @errors = metric.Errors
