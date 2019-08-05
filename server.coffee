@@ -13,7 +13,7 @@ enforceSSL = require './app/lib/enforce-ssl'
 config = require("./app/config")
 devconfig = require("./app/devconfig")
 
-port = 3333
+port = process.env.PORT or 3333
 maxCacheAge = devconfig.time.cache * 60 * 1000  # page cache (in ms)
 svTimeout = devconfig.time.timeout * 1000  # server timeout (in ms)
 
