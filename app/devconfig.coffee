@@ -89,11 +89,11 @@ mobileDevice = (/"#{mobileTerms}"/i).test ua?.toLowerCase()[...4]
 
 if debug.staging
   environment = 'staging'
-  dataSource = 'remote'
+  dataSource = 'local'
   verbose = debug.verbose
 else if debug.production
   environment = 'production'
-  dataSource = 'remote'
+  dataSource = 'local'
   verbose = false
 else
   environment = 'development'
