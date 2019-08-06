@@ -286,7 +286,6 @@ module.exports = (vnode, attrs) ->
 
   [
     m '.br-pagetitle', [
-      m 'i.icon ion-ios-home-outline'
       m 'div', [
         m 'h4', site.title
         m 'p.mg-b-0', site.description
