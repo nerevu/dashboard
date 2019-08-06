@@ -23,6 +23,12 @@ replaceClass = (el, oldClassName, newClassName) ->
   removeClass el, oldClassName
   addClass el, newClassName
 
+hiddenXS = 'd-none d-sm-table-cell'
+hiddenSM = 'd-none d-md-table-cell'
+hiddenMD = 'd-none d-lg-table-cell'
+hiddenLG = 'd-none d-xl-table-cell'
+hiddenAll = 'd-none'
+
 module.exports =
   addClass: addClass
   removeClass: removeClass
@@ -92,3 +98,17 @@ module.exports =
       margin += ' mg-md-t-0'
 
     margin
+
+  getHidden: (value, visible) ->
+    if value not in visible.xl
+      hiddenAll
+    else if value not in visible.lg
+      hiddenLG
+    else if value not in visible.md
+      hiddenMD
+    else if value not in visible.sm
+      hiddenSM
+    else if value not in visible.xs
+      hiddenXS
+    else
+      ''

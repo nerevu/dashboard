@@ -13,6 +13,8 @@ module.exports = (vnode, attrs) ->
   attrs = Object.assign attrs or {}, vnode.attrs
   site = config.site
   rows = ctrl.metrics.list
+  visible = ctrl.metrics.visible
+
   year = (new Date()).getFullYear()
   months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
@@ -303,10 +305,13 @@ module.exports = (vnode, attrs) ->
             m 'table.table table-hover table-bordered', [
               m 'thead.thead-colored thead-info',
                 m 'tr', headerValues.map (value) ->
-                  m 'th', {'scope': 'col'}, value
+                  hidden = helpers.getHidden value, visible
+                  m "th.#{hidden}", {'scope': 'col'}, value
 
               m 'tbody', rows.map (row) ->
-                m 'tr', Object.values(row).map (value) -> m 'td', value
+                m 'tr', Object.entries(row).map ([key, value]) ->
+                  hidden = helpers.getHidden key, visible
+                  m "td.#{hidden}", value
             ]
           else
             m 'p.lead', 'Loading...'
