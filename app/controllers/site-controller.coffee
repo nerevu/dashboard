@@ -42,14 +42,19 @@ module.exports = class Controller
     helpers.addMeta @head, 'og:title', site.title, keyType=keyType
     helpers.addMeta @head, 'og:siteName', site.title, keyType=keyType
     helpers.addMeta @head, 'og:description', site.description
-    helpers.addMeta @head, 'og:url', site.url, keyType=keyType
+
+    if site.url
+      helpers.addMeta @head, 'og:url', site.url, keyType=keyType
+
     helpers.addMeta @head, 'og:type', site.type, keyType=keyType
-    helpers.addMeta @head, 'og:image', site.image, keyType=keyType
-    helpers.addMeta @head, 'og:secure_url', site.image, keyType=keyType
-    helpers.addMeta @head, 'og:image:secure_url', site.image, keyType=keyType
-    helpers.addMeta @head, 'og:image:type', 'image/png', keyType=keyType
-    helpers.addMeta @head, 'og:image:width', '1200', keyType=keyType
-    helpers.addMeta @head, 'og:image:height', '600', keyType=keyType
+
+    if site.image
+      helpers.addMeta @head, 'og:image', site.image, keyType=keyType
+      helpers.addMeta @head, 'og:secure_url', site.image, keyType=keyType
+      helpers.addMeta @head, 'og:image:secure_url', site.image, keyType=keyType
+      helpers.addMeta @head, 'og:image:type', 'image/png', keyType=keyType
+      helpers.addMeta @head, 'og:image:width', '1200', keyType=keyType
+      helpers.addMeta @head, 'og:image:height', '600', keyType=keyType
 
     # Twitter
     helpers.addMeta @head, 'twitter:title', site.title, keyType=keyType

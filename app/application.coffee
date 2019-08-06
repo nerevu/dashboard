@@ -10,7 +10,7 @@ module.exports =
   oninit: (vnode) ->
     helpers.log 'initializing app'
     vnode.state.ctrl = ctrl = new Controller vnode.attrs
-    # ctrl.addErrorHandler()
+    ctrl.initSiteMeta()
 
     getPromises = (names) -> names.map (name) ->
       collection = ctrl[name]
