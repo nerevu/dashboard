@@ -5,6 +5,7 @@ StatBox = require './components/stat-box'
 StatCard = require './components/stat-card'
 
 config = require 'config'
+helpers = require 'lib/helpers'
 author = config.author
 
 module.exports = (vnode, attrs) ->
@@ -276,8 +277,9 @@ module.exports = (vnode, attrs) ->
     ]
 
     m '.br-pagebody', [
-      m '.row row-sm', statBoxData.map (data) ->
-        m '.col-sm-12 col-xl-4', m StatBox, data
+      m '.row row-sm', statBoxData.map (data, pos) ->
+        margin = helpers.getMarginTop pos
+        m ".col-sm-6 col-xl-4 #{margin}", m StatBox, data
 
       m '.row row-sm mg-t-20',
         m '.col-sm-12', [
@@ -285,11 +287,13 @@ module.exports = (vnode, attrs) ->
           m ChartHorizontal, chartHorizontalAttrs
         ]
 
-      m '.row row-sm mg-t-20', statCardCurrentData.map (data) ->
-        m '.col-sm-4', m StatCard, data
+      m '.row row-sm mg-t-20', statCardCurrentData.map (data, pos) ->
+        margin = helpers.getMarginTop pos, {sm: 6, md: 4}
+        m ".col-xs-12 col-sm-6 col-md-4 #{margin}", m StatCard, data
 
-      m '.row row-sm mg-t-20', statCardPreviousData.map (data) ->
-        m '.col-sm-4', m StatCard, data
+      m '.row row-sm mg-t-20', statCardPreviousData.map (data, pos) ->
+        margin = helpers.getMarginTop pos, {sm: 6, md: 4}
+        m ".col-xs-12 col-sm-6 col-md-4 #{margin}", m StatCard, data
 
       m '.row row-sm mg-t-20',
         m '.col-sm-12',

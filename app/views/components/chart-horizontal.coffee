@@ -37,11 +37,11 @@ module.exports =
       ]
 
       m '.row mg-t-20', [
-        m '.col-sm-9',
+        m '.col-md-9',
           m "canvas##{attrs.id}.ht-120 ht-sm-120", {height: '180'}
 
         if attrs.infoGroup
-          m '.col-sm-3 mg-t-40 mg-sm-t-0', [
+          m '.col-md-3 mg-t-40 mg-sm-t-20', [
             m 'p.lead', attrs.infoGroup.title
 
             attrs.infoGroup.data.map (data, pos) ->

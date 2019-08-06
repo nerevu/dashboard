@@ -75,3 +75,20 @@ module.exports =
   uniqSort: (array) -> _.sortedUniq _.sortBy array
   replaceUrl: (old, _new) ->
     m.route.set m.route.get().replace(old, _new), null, replace: true
+
+  getMarginTop: (pos, opts) ->
+    sm = opts?.sm or 6
+    md = opts?.md or 6
+
+    if not pos
+      return ''
+
+    margin = 'mg-t-20 mg-xl-t-0'
+
+    if (pos <= 2 and sm is 4) or (pos <= 1 and sm is 6) or (not pos and sm is 12)
+      margin += ' mg-sm-t-0'
+
+    if (pos <= 2 and md is 4) or (pos <= 1 and md is 6) or (not pos and md is 12)
+      margin += ' mg-md-t-0'
+
+    margin
