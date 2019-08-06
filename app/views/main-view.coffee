@@ -3,6 +3,7 @@ ChartHorizontal = require './components/chart-horizontal'
 ChartVertical = require './components/chart-vertical'
 StatBox = require './components/stat-box'
 StatCard = require './components/stat-card'
+InfoCard = require './components/info-card'
 
 config = require 'config'
 helpers = require 'lib/helpers'
@@ -67,9 +68,8 @@ module.exports = (vnode, attrs) ->
     }
   ]
 
-  chartVerticalAttrs =
+  monthlyMetricsAttrs =
     pos: 0
-    id: 'monthlyMetrics'
     title: "Monthly Metrics (past 12 months)"
     description: 'Alegna Sales, Profit, and Commissions Owed over the past 12 months'
     chartData:
@@ -96,27 +96,10 @@ module.exports = (vnode, attrs) ->
         }
       ]
 
-  chartHorizontalAttrs =
+  monthlyCommisionsAttrs =
     pos: 0
-    id: 'monthlyCommisions'
     title: "Monthly Commissions (past 12 months)"
     description: 'Sales Rep Commissions over the past 12 months'
-    infoGroup:
-      title: "Top Sales Reps for month of May"
-      data: [
-        {
-          title: "1st Place"
-          value: 'Hosea Washington'
-          description: '$2,093 (12% higher than last month)'
-          color: 'success'
-        }, {
-          title: "2nd Place"
-          value: 'Gerard Lewis'
-          description: '$143 (12% higher than last month)'
-          color: 'success'
-        }
-      ]
-
     chartData:
       labels: months
       datasets: [
@@ -134,6 +117,38 @@ module.exports = (vnode, attrs) ->
           fill: true
         }
       ]
+
+  infoCardCurrentData =
+    title: "Top Sales Reps | May 2019"
+    data: [
+      {
+        title: "1st Place"
+        value: 'Hosea Washington'
+        description: '$2,093 (13% higher than last month)'
+        color: 'success'
+      }, {
+        title: "2nd Place"
+        value: 'Gerard Lewis'
+        description: '$143 (6% higher than last month)'
+        color: 'success'
+      }
+    ]
+
+  infoCardPreviousData =
+    title: "Top Sales Reps | April 2019"
+    data: [
+      {
+        title: "1st Place"
+        value: 'Hosea Washington'
+        description: '$1,073 (9% higher than previous month)'
+        color: 'success'
+      }, {
+        title: "2nd Place"
+        value: 'Gerard Lewis'
+        description: '$453 (11% higher than previous month)'
+        color: 'success'
+      }
+    ]
 
   statCardCurrentData = [
     {
@@ -283,13 +298,24 @@ module.exports = (vnode, attrs) ->
         margin = helpers.getMarginTop pos
         m ".col-sm-6 col-xl-4 #{margin}", m StatBox, data
 
-      m '.row row-sm mg-t-20',
-        m '.col-sm-12', [
-          m ChartVertical, chartVerticalAttrs
-          m ChartHorizontal, chartHorizontalAttrs
-        ]
+      # TODO: make these classes
+      # hidden-xs
+      m '.row row-sm mg-t-20 d-none d-sm-flex', [
+        m '.col-xl-6', m ChartVertical, Object.assign({id: 'vertMetrics'}, monthlyMetricsAttrs)
+        m '.col-xl-6', m ChartVertical, Object.assign({id: 'vertCommisions'}, monthlyCommisionsAttrs)
+      ]
 
-      m '.row row-sm mg-t-20', statCardCurrentData.map (data, pos) ->
+      # visible xs
+      m '.row row-sm mg-t-20 d-flex d-sm-none', [
+        m '.col-xs-12', m ChartHorizontal, Object.assign({id: 'horzMetrics'}, monthlyMetricsAttrs)
+        m '.col-xl-12', m ChartHorizontal, Object.assign({id: 'horzCommisions'}, monthlyCommisionsAttrs)
+      ]
+
+      m '.row row-sm mg-t-20',
+        m ".col-md-6", m InfoCard, infoCardCurrentData
+        m ".col-md-6", m InfoCard, infoCardPreviousData
+
+      m '.row row-sm mg-t-40', statCardCurrentData.map (data, pos) ->
         margin = helpers.getMarginTop pos, {sm: 6, md: 4}
         m ".col-xs-12 col-sm-6 col-md-4 #{margin}", m StatCard, data
 
@@ -297,7 +323,7 @@ module.exports = (vnode, attrs) ->
         margin = helpers.getMarginTop pos, {sm: 6, md: 4}
         m ".col-xs-12 col-sm-6 col-md-4 #{margin}", m StatCard, data
 
-      m '.row row-sm mg-t-20',
+      m '.row row-sm mg-t-40',
         m '.col-sm-12',
           if rows
             headerValues = Object.keys rows[0]

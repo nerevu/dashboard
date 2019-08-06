@@ -23,6 +23,7 @@ replaceClass = (el, oldClassName, newClassName) ->
   removeClass el, oldClassName
   addClass el, newClassName
 
+# TODO: make these classes
 hiddenXS = 'd-none d-sm-table-cell'
 hiddenSM = 'd-none d-md-table-cell'
 hiddenMD = 'd-none d-lg-table-cell'

@@ -26,9 +26,9 @@ module.exports =
 
   view: (vnode) ->
     attrs = vnode.attrs
-    margin = if attrs.pos then 'mg-t-20' else ''
+    size = if attrs.infoGroup then 9 else 12
 
-    m ".card bd-0 shadow-base pd-25 mg-t-20 #{margin}", [
+    m '.card bd-0 shadow-base pd-25 mg-t-20', [
       m '.d-md-flex justify-content-between', [
         m 'div', [
           m 'h6.tx-13 tx-uppercase tx-inverse tx-semibold tx-spacing-1', attrs.title
@@ -37,8 +37,8 @@ module.exports =
       ]
 
       m '.row mg-t-20', [
-        m '.col-md-9',
-          m "canvas##{attrs.id}.ht-120 ht-sm-120", {height: '180'}
+        m ".col-md-#{size}",
+          m "canvas##{attrs.id}", {height: attrs.height or '400'}
 
         if attrs.infoGroup
           m '.col-md-3 mg-t-40 mg-sm-t-20', [
