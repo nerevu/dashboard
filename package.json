@@ -33,7 +33,6 @@
     "compression": "^1.7.2",
     "connect-history-api-fallback": "^1.6.0",
     "connect-timeout": "^1.9.0",
-    "css-element-queries": "^1.2.1",
     "express": "^4.16.3",
     "helmet": "^3.12.1",
     "ionicons": "^2.0.1",

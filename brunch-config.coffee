@@ -31,7 +31,6 @@ exports.config =
     styles:
       ionicons: ['css/ionicons.min.css']
       rickshaw: ['rickshaw.min.css']
-      "morris.js": ['morris.css']
 
     globals:
       _: "lodash"
