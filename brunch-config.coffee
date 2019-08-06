@@ -14,8 +14,8 @@ exports.config =
       keepSpecialComments: 0
       removeEmpty: true
 
-    uglify:
-      mangle: true
+    terser:
+      mangle: false
 
     sass:
       allowCache: true
