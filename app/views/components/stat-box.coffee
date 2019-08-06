@@ -1,16 +1,18 @@
 m = require 'mithril'
 
-chartOpts =
-  renderer: 'bar'
-  stack: true
+chartOpts = {renderer: 'bar', stack: true}
 
 module.exports =
   oncreate: (vnode) ->
     attrs = vnode.attrs
     element = document.getElementById attrs.id
-    opts = {element, series: [{data: attrs.chartData, color: 'rgba(255,255,255,0.5)'}]}
+    opts = {element, series: [{data: attrs.chartData, color: 'rgba(255, 255, 255, 0.5)'}]}
     graph = new Rickshaw.Graph Object.assign(opts, chartOpts)
     graph.render()
+
+    window.addEventListener 'resize', ->
+      graph.configure {width: element.clientWidth}
+      graph.render()
 
   view: (vnode) ->
     attrs = vnode.attrs
