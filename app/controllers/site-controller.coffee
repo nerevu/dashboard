@@ -20,12 +20,16 @@ module.exports = class Controller
     @head = document.getElementsByTagName('head')[0]
     @body = document.getElementsByTagName('body')[0]
 
-  populateModels: =>
+  populate: =>
     Object.keys(@collections).forEach (name) =>
       collection = @collections[name]
 
-      if collection.list and collection.populate
-        collection.populate @collections
+      if collection.list
+        collection.populateListBy?()
+
+        if collection.populate
+          collection.populate @collections
+          collection.populated = true
 
   initSiteMeta: =>
     document.title = site.title

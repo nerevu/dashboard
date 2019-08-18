@@ -12,6 +12,7 @@ module.exports = class Collection
     @model = model
     @name = collectionName
     @resourceName = options?.resourceName or @name
+    @populated = false
 
   fetch: (options) =>
     helpers.log "fetching #{@name}..."
@@ -35,7 +36,7 @@ module.exports = class Collection
       if not resp?.length
         resp = [{}]
 
-      @list = resp.map (model) => new @model model
+      @list = resp.map (model, pos) => new @model model, pos
       @listById = _.groupBy @list, 'id'
       helpers.log "loaded #{@resourceName}"
 

@@ -22,7 +22,7 @@ module.exports =
         Promise.resolve()
 
     fetched = Promise.all getPromises(['metrics'])
-    fetched.then(ctrl.populateModels).then(m.redraw)
+    fetched.then(ctrl.populate).then(m.redraw)
 
   oncreate: (vnode) ->
     helpers.log 'creating app'
