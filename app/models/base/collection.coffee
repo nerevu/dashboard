@@ -24,19 +24,27 @@ module.exports = class Collection
     else
       m = require 'mithril'
 
+      callback = (resp) =>
+        result = resp.result
+
+        if not result?.length
+          throw new Error resp.message
+
+        @list = result.map (model, pos) => new @model model, pos
+        @listById = _.groupBy @list, 'id'
+        helpers.log "loaded #{@resourceName}"
+
+      errback = (e) =>
+        @error = "Error fetching #{@name}!"
+        error = e.details or e
+
+        if error
+          @error += " #{error}"
+
+        console.error @error
+
       promise = m.request(url: "#{devconfig.urls.api}/#{@resourceName}")
-        .catch (e) =>
-          console.error e.details or e
-          @error = "Error fetching #{@name}!"
-          []
-
-    promise.then (resp) =>
-      if not resp?.length
-        resp = [{}]
-
-      @list = resp.map (model, pos) => new @model model, pos
-      @listById = _.groupBy @list, 'id'
-      helpers.log "loaded #{@resourceName}"
+      promise.then(callback).catch(errback)
 
   get: (id) => @listById[id]?[0]
   populate: null
