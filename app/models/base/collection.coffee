@@ -24,13 +24,11 @@ module.exports = class Collection
     else
       m = require 'mithril'
 
-      promise = m.request(
-        url: "#{devconfig.urls.api}/#{@resourceName}"
-        data: {page: 0, size: limit, sort: 'id'}
-      ).catch (e) =>
-        console.error e.details or e
-        @error = "Error fetching #{@name}!"
-        []
+      promise = m.request(url: "#{devconfig.urls.api}/#{@resourceName}")
+        .catch (e) =>
+          console.error e.details or e
+          @error = "Error fetching #{@name}!"
+          []
 
     promise.then (resp) =>
       if not resp?.length

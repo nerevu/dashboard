@@ -47,15 +47,15 @@ limit =
 urls =
   development:
     app: "//127.0.0.1:3333"
-    api: "//127.0.0.1:5000/v1/data?reportType=dashboard"
+    api: "//127.0.0.1:5000/v1"
 
   production:
     app: "//alegna-dashboard.nerevu.com"
-    api: "//alegna-api.nerevu.com/v1/data?reportType=dashboard"
+    api: "//alegna-api.nerevu.com/v1"
 
   staging:
     app: "//alegna-dashboard-stage.nerevu.com"
-    api: "//alegna-api-stage.nerevu.com/v1/data?reportType=dashboard"
+    api: "//alegna-api-stage.nerevu.com/v1"
 
 ua = navigator?.userAgent
 mobileTerms = "(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
