@@ -37,7 +37,7 @@ DAYSRANGE = _.range 0, 28 * 13, 28
 
 module.exports = class Metrics extends Collection
   constructor: ->
-    super Metric, 'realtime_data?reportType=dashboard'
+    super Metric, 'realtime_data'
     @listByRep = null
     @listByPeriod = null
 

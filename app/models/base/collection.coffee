@@ -24,27 +24,30 @@ module.exports = class Collection
     else
       m = require 'mithril'
 
-      callback = (resp) =>
-        result = resp.result
+      promise = m.request
+        url: "#{devconfig.urls.api}/#{@resourceName}"
+        data: {reportType: "dashboard"}
 
-        if not result?.length
-          throw new Error resp.message
+    callback = (resp) =>
+      result = resp.result
 
-        @list = result.map (model, pos) => new @model model, pos
-        @listById = _.groupBy @list, 'id'
-        helpers.log "loaded #{@resourceName}"
+      if not result?.length
+        throw new Error resp.message or "Received empty result!"
 
-      errback = (e) =>
-        @error = "Error fetching #{@name}!"
-        error = e.details or e
+      @list = result.map (model, pos) => new @model model, pos
+      @listById = _.groupBy @list, 'id'
+      helpers.log "loaded #{@resourceName}"
 
-        if error
-          @error += " #{error}"
+    errback = (e) =>
+      @error = "Error fetching #{@name}!"
+      error = e.details or e
 
-        console.error @error
+      if error
+        @error += " #{error}"
 
-      promise = m.request(url: "#{devconfig.urls.api}/#{@resourceName}")
-      promise.then(callback).catch(errback)
+      console.error @error
+
+    promise.then(callback).catch(errback)
 
   get: (id) => @listById[id]?[0]
   populate: null
