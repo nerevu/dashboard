@@ -30,6 +30,7 @@ module.exports =
 
   onbeforeupdate: (vnode) ->
     console.log 'onbeforeupdate app'
+    vnode.state.ctrl.update vnode.attrs
 
   onupdate: (vnode) ->
     console.log 'onupdate app'
