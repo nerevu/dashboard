@@ -22,7 +22,7 @@ module.exports = (vnode, attrs) ->
   if ctrl.metrics.populated
     periods = ctrl.metrics.periods
     currentPeriod = periods[-1..]
-    categories = ctrl.metrics.categories
+    categories = ctrl.metrics.categories.filter (cat) -> cat.id isnt 'profit'
     reps = ctrl.metrics.reps
 
     statBoxData = categories.map (category) ->
