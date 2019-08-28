@@ -13,6 +13,7 @@ module.exports = (vnode, attrs) ->
   ctrl = vnode.state.ctrl
   attrs = Object.assign attrs or {}, vnode.attrs
   site = config.site
+  site.description = site.description.replace ", profits,", ''
   colors = config.site.colors
   rows = ctrl.metrics.list
   visible = ctrl.metrics.visible
@@ -43,7 +44,7 @@ module.exports = (vnode, attrs) ->
     monthlyMetricsAttrs =
       pos: 0
       title: "Monthly Metrics (past 12 months)"
-      description: 'Alegna Sales, Profit, and Commissions Owed over the past 12 months'
+      description: 'Alegna Sales and Commissions Owed over the past 12 months'
       chartData:
         labels: periods
         datasets: categories.map (category) ->
@@ -133,7 +134,7 @@ module.exports = (vnode, attrs) ->
         if ctrl.metrics.populated
           statBoxData.map (data, pos) ->
             margin = helpers.getMarginTop pos
-            m ".col-sm-6 col-xl-4 #{margin}", m StatBox, data
+            m ".col-sm-6 col-xl-6 #{margin}", m StatBox, data
         else
           margin = helpers.getMarginTop()
           m ".col-sm-6 col-xl-4 #{margin}", m 'p.lead', 'Loading...'
@@ -161,7 +162,7 @@ module.exports = (vnode, attrs) ->
           statCardsData.map (cardData) ->
             m '.row row-sm mg-t-20', cardData.map (data, pos) ->
               margin = helpers.getMarginTop pos, {sm: 6, md: 4}
-              m ".col-xs-12 col-sm-6 col-md-4 #{margin}", m StatCard, data
+              m ".col-xs-12 col-sm-6 col-md-6 #{margin}", m StatCard, data
 
           m '.row row-sm mg-t-40',
             m '.col-sm-12',
