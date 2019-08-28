@@ -1,9 +1,10 @@
 m = require 'mithril'
 config = require 'config'
 helpers = require 'lib/helpers'
-main = require './main-view'
+admin = require './admin-view'
+salesrep = require './salesrep-view'
 
 module.exports = (vnode, attrs) ->
   ctrl = vnode.state.ctrl
   attrs = Object.assign attrs or {}, vnode.attrs
-  main vnode
+  if ctrl.page() is 'admin' then admin vnode else salesrep vnode
