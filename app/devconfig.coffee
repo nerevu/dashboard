@@ -1,15 +1,15 @@
 try
   NODE_ENV = $PROCESS_ENV_NODE_ENV or 'development'
-  QAM_DATA_SRC = $PROCESS_ENV_QAM_DATA_SRC or 'local'
+  ALEGNA_DASH_DATA_SRC = $PROCESS_ENV_ALEGNA_DASH_DATA_SRC or 'local'
 catch
   NODE_ENV = process.env.NODE_ENV or 'development'
-  QAM_DATA_SRC = process.env.QAM_DATA_SRC or 'local'
+  ALEGNA_DASH_DATA_SRC = process.env.ALEGNA_DASH_DATA_SRC or 'local'
 
 debug =
   mobile: false
   production: NODE_ENV is 'production'
   staging: NODE_ENV is 'staging'
-  localFile: QAM_DATA_SRC is 'local'
+  localFile: ALEGNA_DASH_DATA_SRC is 'local'
   verbose: false
 
 time =
@@ -46,16 +46,16 @@ limit =
 
 urls =
   development:
-    app: "//0.0.0.0:3333"
-    api: "//0.0.0.0:8000/v1"
+    app: "//127.0.0.1:3333"
+    api: "//127.0.0.1:5000/v1"
 
   production:
-    app: "//qam-app.nerevu.com"
-    api: "//qam-api.nerevu.com/v1"
+    app: "//alegna-dashboard.nerevu.com"
+    api: "//alegna-api.nerevu.com/v1"
 
   staging:
-    app: "//qam-app-stage.nerevu.com"
-    api: "//qam-api-stage.nerevu.com/v1"
+    app: "//alegna-dashboard-stage.nerevu.com"
+    api: "//alegna-api-stage.nerevu.com/v1"
 
 ua = navigator?.userAgent
 mobileTerms = "(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
@@ -89,7 +89,7 @@ mobileDevice = (/"#{mobileTerms}"/i).test ua?.toLowerCase()[...4]
 
 if debug.staging
   environment = 'staging'
-  dataSource = 'remote'
+  dataSource = 'local'
   verbose = debug.verbose
 else if debug.production
   environment = 'production'

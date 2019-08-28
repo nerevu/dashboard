@@ -27,7 +27,7 @@
 // @import "bootstrap/popover";
 // @import "bootstrap/progress";
 // @import "bootstrap/tooltip";
-// @import "bootstrap/tables";
+@import "bootstrap/tables";
 // @import "bootstrap/widgets";
 
 @import "lib/mixins";
@@ -80,4 +80,8 @@
 
 .collapsed-menu .br-mainpanel {
     margin: 0;
+}
+
+.stat-card .card-header {
+    opacity: 0.6
 }

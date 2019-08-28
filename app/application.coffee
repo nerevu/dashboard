@@ -10,7 +10,7 @@ module.exports =
   oninit: (vnode) ->
     helpers.log 'initializing app'
     vnode.state.ctrl = ctrl = new Controller vnode.attrs
-    # ctrl.addErrorHandler()
+    ctrl.initSiteMeta()
 
     getPromises = (names) -> names.map (name) ->
       collection = ctrl[name]
@@ -22,12 +22,11 @@ module.exports =
         Promise.resolve()
 
     fetched = Promise.all getPromises(['metrics'])
-    fetched.then(ctrl.populateModels).then(m.redraw)
+    fetched.then(ctrl.populate).then(m.redraw)
 
   oncreate: (vnode) ->
     helpers.log 'creating app'
     ctrl = vnode.state.ctrl
-    ctrl.addListeners()
 
   onbeforeupdate: (vnode) ->
     console.log 'onbeforeupdate app'
@@ -35,10 +34,5 @@ module.exports =
   onupdate: (vnode) ->
     console.log 'onupdate app'
     ctrl = vnode.state.ctrl
-
-    if ctrl.loaded()
-      ctrl.initalizePlugins()
-
-    ctrl.updateSiteMeta()
 
   view: view
