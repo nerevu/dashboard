@@ -47,7 +47,7 @@ limit =
 urls =
   development:
     app: "//127.0.0.1:3333"
-    api: "//127.0.0.1:5000/v1"
+    api: "//alegna-api.nerevu.com/v1" #localhost can't connect to quickbooks
 
   production:
     app: "//alegna-dashboard.nerevu.com"

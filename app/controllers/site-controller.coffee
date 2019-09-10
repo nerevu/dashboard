@@ -5,6 +5,7 @@ config = require 'config'
 devconfig = require 'devconfig'
 helpers = require 'lib/helpers'
 Metrics = require 'models/metrics'
+WeightedAvgSales = require 'models/weighted-avg-sales'
 
 site = config.site
 author = config.author
@@ -16,7 +17,9 @@ module.exports = class Controller
     @page = stream attrs.page
 
     @metrics = new Metrics()
-    @collections = metrics: @metrics
+    @weighted_avg_sales = new WeightedAvgSales()
+    @collections =
+      metrics: @metrics
 
     @head = document.getElementsByTagName('head')[0]
     @body = document.getElementsByTagName('body')[0]

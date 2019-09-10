@@ -1,5 +1,5 @@
 Collection = require './base/collection'
-Metric = require './metric'
+WeightedAvgSale = require './weighted-avg-sale'
 
 getStatDetails = (final, initial) ->
   change = final - initial
@@ -36,82 +36,35 @@ formatDate = (date) ->
 # Does this create what we want it to?
 DAYSRANGE = _.range 0, 28 * 13, 28
 
-module.exports = class Metrics extends Collection
-  constructor: ->
-    super Metric, 'realtime_data', 'dashboard'
-    @listByRep = null
-    @listByPeriod = null
+module.exports = class WeightedAvgSales extends Collection
+  constructor: () ->
+    super WeightedAvgSale, 'data', 'sales'
+    @list = null
+    @listByPeriodAndRep = {}
 
     # Create a range of dates representing each month for the past 12 months
     @periods = _.uniq DAYSRANGE.map(subtractDays).map(formatDate)
     @periods.reverse()
     @leaders = {}
 
-    @categories = [
-      {
-        id: 'sales'
-        title: 'Sales'
-        property: 'amount'
-        color: 'purple'
-        backgroundColor: '#6f42c1'
-        icon: 'bag'
-      }, {
-        id: 'total_upsells'
-        category: 'metric'
-        title: 'Upsells'
-        property: 'total_upsells'
-        color: 'info'
-        backgroundColor: '#30a2b7'
-        # TODO - find an icon
-        icon: 'ribbon-a'
-      }, {
-        id: 'profit'
-        title: 'Profit'
-        property: 'profit'
-        color: 'success'
-        backgroundColor: '#23BF08'
-        icon: 'cash'
-      }, {
-        id: 'commission'
-        title: 'Commissions'
-        property: 'commission'
-        color: 'warning'
-        backgroundColor: '#F49917'
-        icon: 'ribbon-a'
-      }, {
-        id: 'weighted_avg_sales'
-        category: 'metric'
-        title: 'Weighted Average Sales'
-        property: 'weighted_avg_sales'
-        color: 'primary'
-        backgroundColor: '#0c66c6'
-        # TODO - find an icon
-        icon: 'ribbon-a'
-      }
-    ]
+    @categories = [{
+      id: 'weighted_avg_sales'
+      category: 'weighted_avg_sales'
+      title: 'Weighted Average Sales'
+      property: 'weighted_avg_sales'
+      color: 'primary'
+      backgroundColor: '#F49917'
+      icon: 'ribbon-a'
+    }]
 
     @categories.forEach (category) => @[category.id] = {}
 
-    @visible =
-      xs: ['invoice_number', 'amount']
-      sm: ['invoice_number', 'amount', 'commission', 'sales_rep']
-      md: ['invoice_number', 'amount', 'commission', 'invoice_date', 'sales_rep']
-      lg: [
-        'invoice_number', 'contract_number', 'po_numbers', 'amount', 'commission',
-        'invoice_date', 'sales_rep'
-      ]
-      xl: [
-        'invoice_number', 'contract_number', 'po_numbers', 'amount', 'commission',
-        'invoice_date', 'invoice_period', 'sales_rep', 'errors'
-      ]
-
     @populateListBy = =>
-      @listPaid = @list.filter (metric) -> metric.paid
-      @listByRep = _.groupBy _.orderBy(@listPaid, 'sales_rep'), 'sales_rep'
-      @listByPeriod = _.groupBy _.orderBy(@listPaid, 'invoice_date'), 'invoice_period'
-
-    @getByRep = (name) => @listByRep[name] or []
-    @getByPeriod = (period) => @listByPeriod[period] or []
+      @listByRep = _.groupBy _.orderBy(@list, 'sales_rep'), 'sales_rep'
+      @reps = Object.keys @listByRep
+      @listByPeriod = _.groupBy @list, 'invoice_period'
+      for period, arr of @listByPeriod
+        @listByPeriodAndRep[period] = _.groupBy arr, 'sales_rep'
 
     @populate = (collections) =>
       @reps = Object.keys @listByRep
@@ -122,12 +75,7 @@ module.exports = class Metrics extends Collection
         prevPeriod = if pos then @periods[pos - 1] else @periods[pos]
 
         @categories.forEach (category) =>
-          if category.property not in ['weighted_avg_sales', 'total_upsells']
-            final = _.sumBy stats, category.property
-          else if stats
-            final = stats[0]?.total_upsells
-          else
-            final = 0
+          final = _.sumBy stats, category.property
 
           if pos and prevPeriod in @availPeriods
             initial = @[category.id][prevPeriod].all.value
@@ -142,12 +90,7 @@ module.exports = class Metrics extends Collection
 
         Object.entries(statsByRep).map ([rep, repStats]) =>
           @categories.forEach (category) =>
-            if category.property not in ['weighted_avg_sales', 'total_upsells']
-              final = _.sumBy repStats, category.property
-            else if repStats
-              final = repStats[0]?.total_upsells
-            else
-              final = 0
+            final = _.sumBy repStats, category.property
 
             if pos and prevPeriod in @availPeriods
               initial = @[category.id][prevPeriod][rep]?.value or 0
@@ -171,5 +114,5 @@ module.exports = class Metrics extends Collection
 
           unless @leaders[category.id]
             @leaders[category.id] = {}
-
           @leaders[category.id][period] = _.orderBy filtered, 'value', 'desc'
+

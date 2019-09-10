@@ -3,9 +3,11 @@ devconfig = require 'devconfig'
 helpers = require 'lib/helpers'
 
 localFile = devconfig.storage.local
+# TODO: fix the way the localFile works
+localFile = null
 
 module.exports = class Collection
-  constructor: (model, collectionName, options) ->
+  constructor: (model, collectionName, reportType, options) ->
     @error = ''
     @list = null
     @listById = {}
@@ -13,20 +15,22 @@ module.exports = class Collection
     @name = collectionName
     @resourceName = options?.resourceName or @name
     @populated = false
+    @reportType = reportType or 'dashboard'
 
   fetch: (options) =>
     helpers.log "fetching #{@name}..."
     limit = if options?.limit? then options?.limit else 0
 
-    if localFile
+    if localFile and @reportType isnt 'sales'
       models = require "../../dev_data/#{@name}"
       promise = Promise.resolve if limit then models[...limit] else models
     else
+
       m = require 'mithril'
 
       promise = m.request
         url: "#{devconfig.urls.api}/#{@resourceName}"
-        data: {reportType: "dashboard"}
+        data: {reportType: @reportType}
 
     callback = (resp) =>
       result = resp.result

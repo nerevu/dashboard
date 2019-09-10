@@ -15,7 +15,13 @@ module.exports = class Metric
     @invoice_period = metric["Invoice Period"]
     @po_numbers = metric["PO Numbers"]
     @missing_pos = metric["Missing POs"]
-    @sales_rep = metric["Sales Rep"].toLowerCase().split(" ")
-      .map (name) -> "#{name[0].toUpperCase()}#{name[1..]}"
-      .join " "
+    @sales_rep = metric["Sales Rep"]
     @errors = metric.Errors
+
+    @sales_weight = metric["Sales Weight"]
+    @total_sales = metric["Total Sales"]
+    @total_upsells = metric["Total Upsells"]
+    @upsell_weight = metric["Upsell Weight"]
+    @weighted_avg_sales = metric["Weighted Average Sales"]
+    @weighted_sales = metric["Weighted Sales"]
+    @weighted_upsells = metric["Weighted Upsells"]
