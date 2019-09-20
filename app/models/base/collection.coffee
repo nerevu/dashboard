@@ -3,8 +3,6 @@ devconfig = require 'devconfig'
 helpers = require 'lib/helpers'
 
 localFile = devconfig.storage.local
-# TODO: fix the way the localFile works
-localFile = null
 
 module.exports = class Collection
   constructor: (model, collectionName, reportType, options) ->
@@ -21,11 +19,10 @@ module.exports = class Collection
     helpers.log "fetching #{@name}..."
     limit = if options?.limit? then options?.limit else 0
 
-    if localFile and @reportType isnt 'sales'
+    if localFile
       models = require "../../dev_data/#{@name}"
       promise = Promise.resolve if limit then models[...limit] else models
     else
-
       m = require 'mithril'
 
       promise = m.request

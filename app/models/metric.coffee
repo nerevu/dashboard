@@ -19,9 +19,16 @@ module.exports = class Metric
     @errors = metric.Errors
 
     @sales_weight = metric["Sales Weight"]
-    @total_sales = metric["Total Sales"]
-    @total_upsells = metric["Total Upsells"]
     @upsell_weight = metric["Upsell Weight"]
-    @weighted_avg_sales = metric["Weighted Average Sales"]
-    @weighted_sales = metric["Weighted Sales"]
-    @weighted_upsells = metric["Weighted Upsells"]
+
+    @period_sales = metric["Period Sales"]
+    @period_upsells = metric["Period Upsells"]
+    @period_weighted_average_sales = metric["Period Weighted Average Sales"]
+    @period_weighted_sales = metric["Period Weighted Sales"]
+    @period_weighted_upsells = metric["Period Weighted Upsells"]
+
+    @rep_period_sales = metric["Rep Period Sales"]
+    @rep_period_upsells = metric["Rep Period Upsells"]
+    @rep_period_weighted_average_sales = metric["Rep Period Weighted Average Sales"]
+    @rep_period_weighted_sales = metric["Rep Period Weighted Sales"]
+    @rep_period_weighted_upsells = metric["Rep Period Weighted Upsells"]

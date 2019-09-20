@@ -18,8 +18,8 @@ module.exports = (vnode, attrs) ->
   visible = ctrl.metrics.visible
   #################################################
   # TODO: remove this when better logic is created.
-  # This is for testing purposes
-  if ctrl.page() is undefined
+  # For now, it declares the root path as the sales view
+  unless ctrl.page()
     ctrl.page('sales')
   #################################################
 
@@ -33,8 +33,8 @@ module.exports = (vnode, attrs) ->
     if ctrl.page() isnt 'admin'
       categories = ctrl.metrics.categories.filter (cat) -> cat.id isnt 'profit'
 
-    upsell_and_categories = (c for c in categories when c.id not in ['weighted_avg_sales'])
-    limited_categories = (c for c in categories when c.id not in ['weighted_avg_sales', 'total_upsells'])
+    upsell_and_categories = categories.filter (c) -> c.id not in ['period_weighted_avg_sales']
+    limited_categories = categories.filter (c) -> c.id not in ['period_weighted_avg_sales', 'period_upsells']
     statBoxData = limited_categories.map (category) ->
       metric = ctrl.metrics[category.id]
       all = metric[currentPeriod].all
@@ -95,22 +95,22 @@ module.exports = (vnode, attrs) ->
       chartData:
         labels: periods
         datasets: ctrl.metrics.reps.map (rep, pos) ->
-          metric = ctrl.metrics.weighted_avg_sales
+          metric = ctrl.metrics.listByPeriodAndRep
 
           {
             label: rep
-            data: periods.map (period) -> metric[period]?[rep]?.value or 0
+            data: periods.map (period) -> metric[period]?[rep]?[0].rep_period_weighted_average_sales or 0
             backgroundColor: colors.rep[pos].hex
             borderWidth: 1
             fill: true
           }
 
     infoCardsData = periods[-2..].map (period) ->
-      data = ctrl.metrics.leaders.sales?[period] or [{}, {}, {}]
-      if not data.length
-        data = [{}, {}, {}]
+      cards_data = ctrl.metrics.leaders.sales?[period] or [{}, {}, {}]
+      chart_data = ensure_min_len(cards_data, 3, {})
+
       title: "Top Sales Reps for #{period}"
-      data: data[-3..].map (leader, pos) ->
+      data: chart_data[-3..].map (leader, pos) ->
         if leader.difference
           diff = leader.difference
 
@@ -118,7 +118,7 @@ module.exports = (vnode, attrs) ->
             title: "#{helpers.positions[pos]} Place"
             value: leader.name
             description: "#{leader.valueText} (#{diff.percentText} #{diff.direction} than previous month)"
-            color: leader.difference.color
+            color: diff.color
           }
         else
           {
@@ -227,10 +227,7 @@ module.exports = (vnode, attrs) ->
           m '.row row-sm mg-t-20 d-flex d-sm-none', [
             m '.col-xs-12', m ChartHorizontal, Object.assign({id: 'horzMetrics'}, monthlyMetricsAttrs)
             m '.col-xl-12', m ChartHorizontal, Object.assign({id: 'horzCommisions'}, monthlyCommisionsAttrs)
-            #################################################
-            # TODO: pick up here tomorrow (add weighted chart)
-            # m '.col-xl-12', m ChartHorizontal, Object.assign({id: 'horzWeightedCommissions'}, monthlyWeightedSalesAttrs)
-            #################################################
+            m '.col-xl-12', m ChartHorizontal, Object.assign({id: 'horzWeightedCommissions'}, monthlyWeightedSalesAttrs)
           ]
 
           m '.row row-sm mg-t-20',
@@ -243,7 +240,6 @@ module.exports = (vnode, attrs) ->
               margin = helpers.getMarginTop pos, {sm: 6, md: 4}
               m ".col-xs-12 col-sm-6 col-md-4 #{margin}", m StatCard, data
               m ".col-xs-12 col-sm-6 col-md-#{statCardsWidth} #{margin}", m StatCard, data
-
 
           m '.row row-sm mg-t-40',
             m '.col-sm-12',
@@ -274,3 +270,8 @@ module.exports = (vnode, attrs) ->
         ]
     ]
   ]
+
+ensure_min_len = (data, len, fill) ->
+  to_fill = len - data.length
+  filler = if to_fill > 0 then (fill for i in [1..to_fill]) else []
+  data.concat(filler)
