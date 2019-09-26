@@ -29,6 +29,7 @@ module.exports = (vnode, attrs) ->
     periods = ctrl.metrics.periods
     currentPeriod = periods[-1..]
     reps = ctrl.metrics.reps
+    commission_score_reps = ctrl.commission_scores.reps
     categories = ctrl.metrics.categories
     if ctrl.page() isnt 'admin'
       categories = ctrl.metrics.categories.filter (cat) -> cat.id isnt 'profit'
@@ -77,12 +78,12 @@ module.exports = (vnode, attrs) ->
       description: 'Sales Rep Commissions over the past 12 months'
       chartData:
         labels: periods
-        datasets: reps.map (rep, pos) ->
+        datasets: reps.map (rep_name, pos) ->
           metric = ctrl.metrics.commission
 
           {
-            label: rep
-            data: periods.map (period) -> metric[period]?[rep]?.value or 0
+            label: rep_name
+            data: periods.map (period) -> metric[period]?[rep_name]?.value or 0
             backgroundColor: colors.rep[pos].hex
             borderWidth: 1
             fill: true
@@ -94,12 +95,12 @@ module.exports = (vnode, attrs) ->
       description: 'Sales Rep Weighted Average Sales over the past 12 months'
       chartData:
         labels: periods
-        datasets: ctrl.metrics.reps.map (rep, pos) ->
+        datasets: reps.map (rep_name, pos) ->
           metric = ctrl.metrics.listByPeriodAndRep
 
           {
-            label: rep
-            data: periods.map (period) -> metric[period]?[rep]?[0].rep_period_weighted_average_sales or 0
+            label: rep_name
+            data: periods.map (period) -> metric[period]?[rep_name]?[0].rep_period_weighted_average_sales or 0
             backgroundColor: colors.rep[pos].hex
             borderWidth: 1
             fill: true
@@ -184,6 +185,23 @@ module.exports = (vnode, attrs) ->
             }
         }
 
+    commissionScoreData =
+      pos: 0
+      title: "Commission Scores for Sales Reps"
+      description: 'The current commission score for each sales rep'
+      chartData:
+        labels: ["Sales Reps"]
+        datasets: commission_score_reps.map (rep_name, pos) ->
+          listByRep = ctrl.commission_scores.listByRep
+
+          {
+            label: rep_name
+            data: [listByRep[rep_name][0].score]
+            backgroundColor: colors.rep[pos].hex
+            borderWidth: 1
+            fill: true
+          }
+
 
   #################################################
   # TODO: fix with better logic later
@@ -221,6 +239,7 @@ module.exports = (vnode, attrs) ->
             m '.col-xl-6', m ChartVertical, Object.assign({id: 'vertMetrics'}, monthlyMetricsAttrs)
             m '.col-xl-6', m ChartVertical, Object.assign({id: 'vertCommisions'}, monthlyCommisionsAttrs)
             m '.col-xl-6', m ChartVertical, Object.assign({id: 'vertWeightedSales'}, monthlyWeightedSalesAttrs)
+            m '.col-xl-6', m ChartVertical, Object.assign({id: 'vertCommissionScore'}, commissionScoreData)
           ]
 
           # visible xs
@@ -228,6 +247,7 @@ module.exports = (vnode, attrs) ->
             m '.col-xs-12', m ChartHorizontal, Object.assign({id: 'horzMetrics'}, monthlyMetricsAttrs)
             m '.col-xl-12', m ChartHorizontal, Object.assign({id: 'horzCommisions'}, monthlyCommisionsAttrs)
             m '.col-xl-12', m ChartHorizontal, Object.assign({id: 'horzWeightedCommissions'}, monthlyWeightedSalesAttrs)
+            m '.col-xl-12', m ChartHorizontal, Object.assign({id: 'horzCommissionScore'}, commissionScoreData)
           ]
 
           m '.row row-sm mg-t-20',

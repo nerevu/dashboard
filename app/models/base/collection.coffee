@@ -9,25 +9,25 @@ module.exports = class Collection
     @error = ''
     @list = null
     @listById = {}
+    @reportType = reportType or 'dashboard'
     @model = model
     @name = collectionName
     @resourceName = options?.resourceName or @name
     @populated = false
-    @reportType = reportType or 'dashboard'
 
   fetch: (options) =>
     helpers.log "fetching #{@name}..."
     limit = if options?.limit? then options?.limit else 0
 
     if localFile
-      models = require "../../dev_data/#{@name}"
+      models = require "../../dev_data/#{@name}-#{@reportType}"
       promise = Promise.resolve if limit then models[...limit] else models
     else
       m = require 'mithril'
 
       promise = m.request
         url: "#{devconfig.urls.api}/#{@resourceName}"
-        data: {reportType: @reportType}
+        data: reportType: @reportType
 
     callback = (resp) =>
       result = resp.result

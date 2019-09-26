@@ -108,8 +108,8 @@ module.exports = class Metrics extends Collection
       @listPaid = @list.filter (metric) -> metric.paid
       @listByRep = _.groupBy _.orderBy(@listPaid, 'sales_rep'), 'sales_rep'
       @listByPeriod = _.groupBy _.orderBy(@listPaid, 'invoice_date'), 'invoice_period'
-      for period, arr of @listByPeriod
-        @listByPeriodAndRep[period] = _.groupBy arr, 'sales_rep'
+      for period, transactionList of @listByPeriod
+        @listByPeriodAndRep[period] = _.groupBy transactionList, 'sales_rep'
 
     @getByRep = (name) => @listByRep[name] or []
     @getByPeriod = (period) => @listByPeriod[period] or []
