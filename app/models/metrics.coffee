@@ -33,13 +33,15 @@ formatDate = (date) ->
 
   "#{monthNum}-#{date.getFullYear()}"
 
+# Does this create what we want it to?
 DAYSRANGE = _.range 0, 28 * 13, 28
 
 module.exports = class Metrics extends Collection
   constructor: ->
-    super Metric, 'realtime_data'
+    super Metric, 'realtime_data', 'dashboard'
     @listByRep = null
     @listByPeriod = null
+    @listByPeriodAndRep = {}
 
     # Create a range of dates representing each month for the past 12 months
     @periods = _.uniq DAYSRANGE.map(subtractDays).map(formatDate)
@@ -55,6 +57,14 @@ module.exports = class Metrics extends Collection
         backgroundColor: '#6f42c1'
         icon: 'bag'
       }, {
+        id: 'period_upsells'
+        title: 'Upsells'
+        property: 'period_upsells'
+        color: 'info'
+        backgroundColor: '#30a2b7'
+        # TODO - find an icon
+        icon: 'ribbon-a'
+      }, {
         id: 'profit'
         title: 'Profit'
         property: 'profit'
@@ -67,6 +77,14 @@ module.exports = class Metrics extends Collection
         property: 'commission'
         color: 'warning'
         backgroundColor: '#F49917'
+        icon: 'ribbon-a'
+      }, {
+        id: 'period_weighted_avg_sales'
+        title: 'Weighted Average Sales'
+        property: 'period_weighted_avg_sales'
+        color: 'primary'
+        backgroundColor: '#0c66c6'
+        # TODO - find an icon
         icon: 'ribbon-a'
       }
     ]
@@ -90,6 +108,8 @@ module.exports = class Metrics extends Collection
       @listPaid = @list.filter (metric) -> metric.paid
       @listByRep = _.groupBy _.orderBy(@listPaid, 'sales_rep'), 'sales_rep'
       @listByPeriod = _.groupBy _.orderBy(@listPaid, 'invoice_date'), 'invoice_period'
+      for period, arr of @listByPeriod
+        @listByPeriodAndRep[period] = _.groupBy arr, 'sales_rep'
 
     @getByRep = (name) => @listByRep[name] or []
     @getByPeriod = (period) => @listByPeriod[period] or []
@@ -103,7 +123,12 @@ module.exports = class Metrics extends Collection
         prevPeriod = if pos then @periods[pos - 1] else @periods[pos]
 
         @categories.forEach (category) =>
-          final = _.sumBy stats, category.property
+          if category.property not in ['period_weighted_avg_sales', 'period_upsells']
+            final = _.sumBy stats, category.property
+          else if stats
+            final = stats[0]?.period_upsells
+          else
+            final = 0
 
           if pos and prevPeriod in @availPeriods
             initial = @[category.id][prevPeriod].all.value
@@ -118,7 +143,12 @@ module.exports = class Metrics extends Collection
 
         Object.entries(statsByRep).map ([rep, repStats]) =>
           @categories.forEach (category) =>
-            final = _.sumBy repStats, category.property
+            if category.property not in ['period_weighted_avg_sales', 'period_upsells']
+              final = _.sumBy repStats, category.property
+            else if repStats
+              final = repStats[0]?.period_upsells
+            else
+              final = 0
 
             if pos and prevPeriod in @availPeriods
               initial = @[category.id][prevPeriod][rep]?.value or 0

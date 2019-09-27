@@ -21,6 +21,7 @@ module.exports =
         helpers.log "No fetch method found for #{name}"
         Promise.resolve()
 
+    # grab all necessary data
     fetched = Promise.all getPromises(['metrics'])
     fetched.then(ctrl.populate).then(m.redraw)
 

@@ -5,7 +5,7 @@ helpers = require 'lib/helpers'
 localFile = devconfig.storage.local
 
 module.exports = class Collection
-  constructor: (model, collectionName, options) ->
+  constructor: (model, collectionName, reportType, options) ->
     @error = ''
     @list = null
     @listById = {}
@@ -13,6 +13,7 @@ module.exports = class Collection
     @name = collectionName
     @resourceName = options?.resourceName or @name
     @populated = false
+    @reportType = reportType or 'dashboard'
 
   fetch: (options) =>
     helpers.log "fetching #{@name}..."
@@ -26,7 +27,7 @@ module.exports = class Collection
 
       promise = m.request
         url: "#{devconfig.urls.api}/#{@resourceName}"
-        data: {reportType: "dashboard"}
+        data: {reportType: @reportType}
 
     callback = (resp) =>
       result = resp.result

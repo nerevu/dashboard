@@ -24,4 +24,4 @@ module.exports =
         {hex: '#1CAF9A', class: 'teal'}
         {hex: '#e83e8c', class: 'pink'}
       ]
-      category: [{class: 'purple'}, {class: 'success'}, {class: 'warning'}]
+      category: [{class: 'purple'}, {class: 'success'}, {class: 'warning'}, {class: 'primary'}, {class: 'info'}]
