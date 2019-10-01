@@ -21,7 +21,7 @@ getStatDetails = (final, initial) ->
       valueText: diffValueText
       percent: perChange
       percentText: perChange.toLocaleString('us-US', {style: 'percent'})
-      color: if change > 0 then 'success' else 'error'
+      color: if change > 0 then 'success' else 'danger'
       direction: if change > 0 then 'higher' else 'lower'
   }
 
