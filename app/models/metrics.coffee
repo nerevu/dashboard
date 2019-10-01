@@ -6,13 +6,19 @@ getStatDetails = (final, initial) ->
   absChange = Math.abs change
   perChange = absChange / initial
   options = {style: 'currency', currency: 'USD'}
+  valueText = final.toLocaleString('us-US', options)
+  diffValueText = absChange.toLocaleString('us-US', options)
+  if valueText == '$0.00'
+    valueText = '$0'
+  if diffValueText == '$0.00'
+    diffValueText = '$0'
 
   {
     value: final
-    valueText: final.toLocaleString('us-US', options)
+    valueText: valueText
     difference:
       value: absChange
-      valueText: absChange.toLocaleString('us-US', options)
+      valueText: diffValueText
       percent: perChange
       percentText: perChange.toLocaleString('us-US', {style: 'percent'})
       color: if change > 0 then 'success' else 'error'
