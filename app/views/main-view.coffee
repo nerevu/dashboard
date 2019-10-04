@@ -29,14 +29,14 @@ module.exports = (vnode, attrs) ->
     periods = ctrl.metrics.periods
     currentPeriod = periods[-1..]
     reps = ctrl.metrics.reps
-    commission_score_reps = ctrl.commission_scores.reps
+    commissionScoreReps = ctrl.commissionScores.reps
     categories = ctrl.metrics.categories
     if ctrl.page() isnt 'admin'
       categories = ctrl.metrics.categories.filter (cat) -> cat.id isnt 'profit'
 
-    upsell_and_categories = categories.filter (c) -> c.id not in ['period_weighted_avg_sales']
-    limited_categories = categories.filter (c) -> c.id not in ['period_weighted_avg_sales', 'period_upsells']
-    statBoxData = limited_categories.map (category) ->
+    upsellAndCategories = categories.filter (c) -> c.id not in ['periodWeightedAvgSales']
+    limitedCategories = categories.filter (c) -> c.id not in ['periodWeightedAvgSales', 'periodUpsells']
+    statBoxData = limitedCategories.map (category) ->
       metric = ctrl.metrics[category.id]
       all = metric[currentPeriod].all
 
@@ -57,7 +57,7 @@ module.exports = (vnode, attrs) ->
       description: 'Alegna Sales, Profit, and Commissions Owed over the past 12 months'
       chartData:
         labels: periods
-        datasets: upsell_and_categories.map (category) ->
+        datasets: upsellAndCategories.map (category) ->
           metric = ctrl.metrics[category.id]
 
           {
@@ -78,12 +78,12 @@ module.exports = (vnode, attrs) ->
       description: 'Sales Rep Commissions over the past 12 months'
       chartData:
         labels: periods
-        datasets: reps.map (rep_name, pos) ->
+        datasets: reps.map (repName, pos) ->
           metric = ctrl.metrics.commission
 
           {
-            label: rep_name
-            data: periods.map (period) -> metric[period]?[rep_name]?.value or 0
+            label: repName
+            data: periods.map (period) -> metric[period]?[repName]?.value or 0
             backgroundColor: colors.rep[pos].hex
             borderWidth: 1
             fill: true
@@ -95,23 +95,23 @@ module.exports = (vnode, attrs) ->
       description: 'Sales Rep Weighted Average Sales over the past 12 months'
       chartData:
         labels: periods
-        datasets: reps.map (rep_name, pos) ->
+        datasets: reps.map (repName, pos) ->
           metric = ctrl.metrics.listByPeriodAndRep
 
           {
-            label: rep_name
-            data: periods.map (period) -> metric[period]?[rep_name]?[0].rep_period_weighted_average_sales or 0
+            label: repName
+            data: periods.map (period) -> metric[period]?[repName]?[0].repPeriodWeightedAverageSales or 0
             backgroundColor: colors.rep[pos].hex
             borderWidth: 1
             fill: true
           }
 
     infoCardsData = periods[-2..].map (period) ->
-      cards_data = ctrl.metrics.leaders.sales?[period] or [{}, {}, {}]
-      chart_data = ensure_min_len(cards_data, 3, {})
+      cardsData = ctrl.metrics.leaders.sales?[period] or [{}, {}, {}]
+      chartData = ensureMinLen(cardsData, 3, {})
 
       title: "Top Sales Reps for #{period}"
-      data: chart_data[-3..].map (leader, pos) ->
+      data: chartData[-3..].map (leader, pos) ->
         if leader.difference
           diff = leader.difference
 
@@ -130,7 +130,7 @@ module.exports = (vnode, attrs) ->
           }
 
     statCardsData = periods[-2..].map (period, periodPos) ->
-      upsell_and_categories.map (category, categoryPos) ->
+      upsellAndCategories.map (category, categoryPos) ->
         metric = ctrl.metrics[category.id][period]
         all = metric?.all
 
@@ -191,12 +191,12 @@ module.exports = (vnode, attrs) ->
       description: 'The current commission score for each sales rep'
       chartData:
         labels: ["Sales Reps"]
-        datasets: commission_score_reps.map (rep_name, pos) ->
-          listByRep = ctrl.commission_scores.listByRep
+        datasets: commissionScoreReps.map (repName, pos) ->
+          listByRep = ctrl.commissionScores.listByRep
 
           {
-            label: rep_name
-            data: [listByRep[rep_name][0].score]
+            label: repName
+            data: [listByRep[repName][0].score]
             backgroundColor: colors.rep[pos].hex
             borderWidth: 1
             fill: true
@@ -291,7 +291,7 @@ module.exports = (vnode, attrs) ->
     ]
   ]
 
-ensure_min_len = (data, len, fill) ->
-  to_fill = len - data.length
-  filler = if to_fill > 0 then (fill for i in [1..to_fill]) else []
+ensureMinLen = (data, len, fill) ->
+  toFill = len - data.length
+  filler = if toFill > 0 then (fill for i in [1..toFill]) else []
   data.concat(filler)

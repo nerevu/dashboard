@@ -63,9 +63,9 @@ module.exports = class Metrics extends Collection
         backgroundColor: '#6f42c1'
         icon: 'bag'
       }, {
-        id: 'period_upsells'
+        id: 'periodUpsells'
         title: 'Upsells'
-        property: 'period_upsells'
+        property: 'periodUpsells'
         color: 'info'
         backgroundColor: '#30a2b7'
         # TODO - find an icon
@@ -85,9 +85,9 @@ module.exports = class Metrics extends Collection
         backgroundColor: '#F49917'
         icon: 'ribbon-a'
       }, {
-        id: 'period_weighted_avg_sales'
+        id: 'periodWeightedAvgSales'
         title: 'Weighted Average Sales'
-        property: 'period_weighted_avg_sales'
+        property: 'periodWeightedAvgSales'
         color: 'primary'
         backgroundColor: '#0c66c6'
         # TODO - find an icon
@@ -98,24 +98,24 @@ module.exports = class Metrics extends Collection
     @categories.forEach (category) => @[category.id] = {}
 
     @visible =
-      xs: ['invoice_number', 'amount']
-      sm: ['invoice_number', 'amount', 'commission', 'sales_rep']
-      md: ['invoice_number', 'amount', 'commission', 'invoice_date', 'sales_rep']
+      xs: ['invoiceNumber', 'amount']
+      sm: ['invoiceNumber', 'amount', 'commission', 'salesRep']
+      md: ['invoiceNumber', 'amount', 'commission', 'invoiceDate', 'salesRep']
       lg: [
-        'invoice_number', 'contract_number', 'po_numbers', 'amount', 'commission',
-        'invoice_date', 'sales_rep'
+        'invoiceNumber', 'contractNumber', 'poNumbers', 'amount', 'commission',
+        'invoiceDate', 'salesRep'
       ]
       xl: [
-        'invoice_number', 'contract_number', 'po_numbers', 'amount', 'commission',
-        'invoice_date', 'invoice_period', 'sales_rep', 'errors'
+        'invoiceNumber', 'contractNumber', 'poNumbers', 'amount', 'commission',
+        'invoiceDate', 'invoicePeriod', 'salesRep', 'errors'
       ]
 
     @populateListBy = =>
       @listPaid = @list.filter (metric) -> metric.paid
-      @listByRep = _.groupBy _.orderBy(@listPaid, 'sales_rep'), 'sales_rep'
-      @listByPeriod = _.groupBy _.orderBy(@listPaid, 'invoice_date'), 'invoice_period'
+      @listByRep = _.groupBy _.orderBy(@listPaid, 'salesRep'), 'salesRep'
+      @listByPeriod = _.groupBy _.orderBy(@listPaid, 'invoiceDate'), 'invoicePeriod'
       for period, transactionList of @listByPeriod
-        @listByPeriodAndRep[period] = _.groupBy transactionList, 'sales_rep'
+        @listByPeriodAndRep[period] = _.groupBy transactionList, 'salesRep'
 
     @getByRep = (name) => @listByRep[name] or []
     @getByPeriod = (period) => @listByPeriod[period] or []
@@ -129,10 +129,10 @@ module.exports = class Metrics extends Collection
         prevPeriod = if pos then @periods[pos - 1] else @periods[pos]
 
         @categories.forEach (category) =>
-          if category.property not in ['period_weighted_avg_sales', 'period_upsells']
+          if category.property not in ['periodWeightedAvgSales', 'periodUpsells']
             final = _.sumBy stats, category.property
           else if stats
-            final = stats[0]?.period_upsells
+            final = stats[0]?.periodUpsells
           else
             final = 0
 
@@ -145,14 +145,14 @@ module.exports = class Metrics extends Collection
 
           @[category.id][period] = all: getStatDetails final, initial
 
-        statsByRep = _.groupBy stats, 'sales_rep'
+        statsByRep = _.groupBy stats, 'salesRep'
 
         Object.entries(statsByRep).map ([rep, repStats]) =>
           @categories.forEach (category) =>
-            if category.property not in ['period_weighted_avg_sales', 'period_upsells']
+            if category.property not in ['periodWeightedAvgSales', 'periodUpsells']
               final = _.sumBy repStats, category.property
             else if repStats
-              final = repStats[0]?.period_upsells
+              final = repStats[0]?.periodUpsells
             else
               final = 0
 

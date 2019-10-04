@@ -6,7 +6,7 @@ module.exports = class CommissionScores extends Collection
     super CommissionScore, 'realtime_data', 'commission_score'
 
     @populateListBy = =>
-      @listByRep = _.groupBy _.orderBy(@list, 'sales_rep'), 'sales_rep'
+      @listByRep = _.groupBy _.orderBy(@list, 'salesRep'), 'salesRep'
 
     @populate = (collections) =>
       @reps = Object.keys(@listByRep)

@@ -17,10 +17,10 @@ module.exports = class Controller
     @page = stream attrs.page
 
     @metrics = new Metrics()
-    @commission_scores = new CommissionScores()
+    @commissionScores = new CommissionScores()
     @collections =
       metrics: @metrics
-      commission_scores: @commission_scores
+      commissionScores: @commissionScores
 
     @head = document.getElementsByTagName('head')[0]
     @body = document.getElementsByTagName('body')[0]

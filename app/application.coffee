@@ -24,7 +24,7 @@ module.exports =
     # grab all necessary data
     fetched = Promise.all getPromises([
       'metrics',
-      'commission_scores'
+      'commissionScores'
     ])
     fetched.then(ctrl.populate).then(m.redraw)
 
