@@ -8,9 +8,9 @@ getStatDetails = (final, initial) ->
   options = {style: 'currency', currency: 'USD'}
   valueText = final.toLocaleString('us-US', options)
   diffValueText = absChange.toLocaleString('us-US', options)
-  if valueText == '$0.00'
+  if valueText is '$0.00'
     valueText = '$0'
-  if diffValueText == '$0.00'
+  if diffValueText is '$0.00'
     diffValueText = '$0'
 
   {

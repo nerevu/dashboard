@@ -257,9 +257,15 @@ module.exports = (vnode, attrs) ->
           statBoxData.map (data, pos) ->
             margin = helpers.getMarginTop pos
             m ".col-sm-6 col-xl-#{statBoxWidth} #{margin}", m StatBox, data
+        else if ctrl.metrics.error
+          margin = helpers.getMarginTop()
+          m ".col-sm-6 col-xl-4 #{margin}", m 'h3.tx-danger', "#{ctrl.metrics.error}"
         else
           margin = helpers.getMarginTop()
-          m ".col-sm-6 col-xl-4 #{margin}", m 'p.lead', 'Loading...'
+          m '', [
+            m '.loading'
+            m '.lead', 'Loading...'
+          ]
 
       if ctrl.metrics.populated
         [

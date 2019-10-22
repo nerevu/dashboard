@@ -40,7 +40,7 @@ module.exports = class Collection
       helpers.log "loaded #{@resourceName}"
 
     errback = (e) =>
-      if e?.status == "Unauthorized" or e?.message.includes 'authentication error' or e?.includes 'authentication error'
+      if e?.status is "Unauthorized" or e?.message.includes 'authentication error' or e?.includes 'authentication error'
         @error = "Re-Authenticating with QuickBooks..."
         window.open("#{devconfig.urls.api}/auth?callback_url=#{window.location.origin}", "_self")
       else
