@@ -5,7 +5,6 @@ config = require 'config'
 devconfig = require 'devconfig'
 helpers = require 'lib/helpers'
 Metrics = require 'models/metrics'
-CommissionScores = require 'models/commission_scores'
 
 site = config.site
 author = config.author
@@ -17,10 +16,7 @@ module.exports = class Controller
     @page = stream attrs.page
 
     @metrics = new Metrics()
-    @commissionScores = new CommissionScores()
-    @collections =
-      metrics: @metrics
-      commissionScores: @commissionScores
+    @collections = metrics: @metrics
 
     @head = document.getElementsByTagName('head')[0]
     @body = document.getElementsByTagName('body')[0]

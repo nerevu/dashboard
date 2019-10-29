@@ -18,6 +18,11 @@ module.exports = class Metric
     @salesRep = metric["Sales Rep"]
     @errors = metric.Errors
 
+    @rating = metric["Rating"]
+    @ratingWeight = metric["Rating Weight"]
+    @interactionScore = metric["Interaction Score"]
+    @interactionWeight = metric["Interaction Weight"]
+
     @salesWeight = metric["Sales Weight"]
     @upsellWeight = metric["Upsell Weight"]
 

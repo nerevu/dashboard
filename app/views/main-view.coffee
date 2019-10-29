@@ -29,7 +29,6 @@ module.exports = (vnode, attrs) ->
     periods = ctrl.metrics.periods
     currentPeriod = periods[-1..]
     reps = ctrl.metrics.reps
-    commissionScoreReps = ctrl.commissionScores.reps
     categories = ctrl.metrics.categories
     if ctrl.page() isnt 'admin'
       categories = ctrl.metrics.categories.filter (cat) -> cat.id isnt 'profit'
@@ -69,6 +68,7 @@ module.exports = (vnode, attrs) ->
             borderWidth: 1
             fill: true
           }
+
     if ctrl.page() isnt 'admin'
       monthlyMetricsAttrs.description =  'Alegna Sales and Commissions Owed over the past 12 months'
 
@@ -101,6 +101,49 @@ module.exports = (vnode, attrs) ->
           {
             label: repName
             data: periods.map (period) -> metric[period]?[repName]?[0].repPeriodWeightedAverageSales or 0
+            backgroundColor: colors.rep[pos].hex
+            borderWidth: 1
+            fill: true
+          }
+
+    monthlyCommissionScoreAttrs =
+      pos: 0
+      title: "Monthly Commission Scores (past 12 months)"
+      description: 'Monthly Commission Scores for Alegna Sales Reps over the past 12 months'
+      chartData:
+        labels: periods
+        datasets: reps.map (repName, pos) ->
+          metric = ctrl.metrics.listByPeriodAndRep
+          data = periods.map (period) ->
+            periodRatings = metric[period]?[repName]?.filter (metr) -> metr.rating
+            periodInteractionScores = metric[period]?[repName]?.filter (metr) -> metr.interactionScore
+
+            ratingWeight = metric[period]?[repName]?[0].ratingWeight
+            interactionWeight = metric[period]?[repName]?[0].interactionWeight
+
+            if periodRatings and periodRatings.length
+              avgRepRating = _.meanBy(periodRatings, 'rating')
+            else
+              #################################################
+              # TODO: This is fake data and will need to be removed once real data is coming in
+              avgRepRating = Math.random()
+              #################################################
+
+            if periodInteractionScores and periodInteractionScores.length
+              avgRepInteractionScore = _.meanBy(periodInteractionScores, 'interactionScore')
+            else
+              #################################################
+              # TODO: This is fake data and will need to be removed once real data is coming in
+              avgRepInteractionScore = Math.random()
+              #################################################
+
+            ratingScore = avgRepRating * ratingWeight
+            interactionScore = avgRepInteractionScore * interactionWeight
+            commissionScore = (ratingScore + interactionScore).toFixed(2)
+
+          {
+            label: repName
+            data: data
             backgroundColor: colors.rep[pos].hex
             borderWidth: 1
             fill: true
@@ -185,22 +228,6 @@ module.exports = (vnode, attrs) ->
             }
         }
 
-    commissionScoreData =
-      pos: 0
-      title: "Commission Scores for Sales Reps"
-      description: 'The current commission score for each sales rep'
-      chartData:
-        labels: ["Sales Reps"]
-        datasets: commissionScoreReps.map (repName, pos) ->
-          listByRep = ctrl.commissionScores.listByRep
-
-          {
-            label: repName
-            data: [listByRep[repName][0].score]
-            backgroundColor: colors.rep[pos].hex
-            borderWidth: 1
-            fill: true
-          }
 
 
   #################################################
@@ -239,7 +266,7 @@ module.exports = (vnode, attrs) ->
             m '.col-xl-6', m ChartVertical, Object.assign({id: 'vertMetrics'}, monthlyMetricsAttrs)
             m '.col-xl-6', m ChartVertical, Object.assign({id: 'vertCommisions'}, monthlyCommisionsAttrs)
             m '.col-xl-6', m ChartVertical, Object.assign({id: 'vertWeightedSales'}, monthlyWeightedSalesAttrs)
-            m '.col-xl-6', m ChartVertical, Object.assign({id: 'vertCommissionScore'}, commissionScoreData)
+            m '.col-xl-6', m ChartVertical, Object.assign({id: 'vertCommissionScore'}, monthlyCommissionScoreAttrs)
           ]
 
           # visible xs
@@ -247,7 +274,7 @@ module.exports = (vnode, attrs) ->
             m '.col-xs-12', m ChartHorizontal, Object.assign({id: 'horzMetrics'}, monthlyMetricsAttrs)
             m '.col-xl-12', m ChartHorizontal, Object.assign({id: 'horzCommisions'}, monthlyCommisionsAttrs)
             m '.col-xl-12', m ChartHorizontal, Object.assign({id: 'horzWeightedCommissions'}, monthlyWeightedSalesAttrs)
-            m '.col-xl-12', m ChartHorizontal, Object.assign({id: 'horzCommissionScore'}, commissionScoreData)
+            m '.col-xl-12', m ChartHorizontal, Object.assign({id: 'horzCommissionScore'}, monthlyCommissionScoreAttrs)
           ]
 
           m '.row row-sm mg-t-20',

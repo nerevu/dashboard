@@ -22,10 +22,7 @@ module.exports =
         Promise.resolve()
 
     # grab all necessary data
-    fetched = Promise.all getPromises([
-      'metrics',
-      'commissionScores'
-    ])
+    fetched = Promise.all getPromises(['metrics'])
     fetched.then(ctrl.populate).then(m.redraw)
 
   oncreate: (vnode) ->
