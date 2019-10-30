@@ -34,3 +34,6 @@ bower_components/
 # Cypress output
 cypress/screenshots
 cypress/videos
+
+# vscode
+.vscode
