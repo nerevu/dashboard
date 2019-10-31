@@ -115,31 +115,34 @@ module.exports = (vnode, attrs) ->
         datasets: reps.map (repName, pos) ->
           metric = ctrl.metrics.listByPeriodAndRep
           data = periods.map (period) ->
-            periodRatings = metric[period]?[repName]?.filter (metr) -> metr.rating
-            periodInteractionScores = metric[period]?[repName]?.filter (metr) -> metr.interactionScore
-
-            ratingWeight = metric[period]?[repName]?[0].ratingWeight
-            interactionWeight = metric[period]?[repName]?[0].interactionWeight
-
-            if periodRatings and periodRatings.length
-              avgRepRating = _.meanBy(periodRatings, 'rating')
+            if not metric[period]?[repName]
+              commissionScore = 0
             else
-              #################################################
-              # TODO: This is fake data and will need to be removed once real data is coming in
-              avgRepRating = Math.random()
-              #################################################
+              periodRatings = metric[period]?[repName]?.filter (metr) -> metr.rating
+              periodInteractionScores = metric[period]?[repName]?.filter (metr) -> metr.interactionScore
 
-            if periodInteractionScores and periodInteractionScores.length
-              avgRepInteractionScore = _.meanBy(periodInteractionScores, 'interactionScore')
-            else
-              #################################################
-              # TODO: This is fake data and will need to be removed once real data is coming in
-              avgRepInteractionScore = Math.random()
-              #################################################
+              ratingWeight = metric[period]?[repName]?[0].ratingWeight
+              interactionWeight = metric[period]?[repName]?[0].interactionWeight
 
-            ratingScore = avgRepRating * ratingWeight
-            interactionScore = avgRepInteractionScore * interactionWeight
-            commissionScore = (ratingScore + interactionScore).toFixed(2)
+              if periodRatings and periodRatings.length
+                avgRepRating = _.meanBy(periodRatings, 'rating')
+              else
+                #################################################
+                # TODO: This is fake data and will need to be removed once real data is coming in
+                avgRepRating = Math.random()
+                #################################################
+
+              if periodInteractionScores and periodInteractionScores.length
+                avgRepInteractionScore = _.meanBy(periodInteractionScores, 'interactionScore')
+              else
+                #################################################
+                # TODO: This is fake data and will need to be removed once real data is coming in
+                avgRepInteractionScore = Math.random()
+                #################################################
+
+              ratingScore = avgRepRating * ratingWeight
+              interactionScore = avgRepInteractionScore * interactionWeight
+              commissionScore = (ratingScore + interactionScore).toFixed(2)
 
           {
             label: repName
