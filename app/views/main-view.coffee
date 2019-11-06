@@ -115,31 +115,30 @@ module.exports = (vnode, attrs) ->
         datasets: reps.map (repName, pos) ->
           metric = ctrl.metrics.listByPeriodAndRep
           data = periods.map (period) ->
-            periodRatings = metric[period]?[repName]?.filter (metr) -> metr.rating
-            periodInteractionScores = metric[period]?[repName]?.filter (metr) -> metr.interactionScore
+            repMetrics = metric[period]?[repName]
 
-            ratingWeight = metric[period]?[repName]?[0].ratingWeight
-            interactionWeight = metric[period]?[repName]?[0].interactionWeight
+            if repMetrics
+              periodRatings = repMetrics.filter (_metric) -> _metric.rating
+              periodInteractionScores = repMetrics.filter (_metric) -> _metric.interactionScore
 
-            if periodRatings and periodRatings.length
-              avgRepRating = _.meanBy(periodRatings, 'rating')
+              ratingWeight = repMetrics[0].ratingWeight or 1
+              interactionWeight = repMetrics[0].interactionWeight or 1
+
+              if periodRatings?.length
+                avgRepRating = _.meanBy(periodRatings, 'rating')
+              else
+                avgRepRating = 0
+
+              if periodInteractionScores?.length
+                avgRepInteractionScore = _.meanBy(periodInteractionScores, 'interactionScore')
+              else
+                avgRepInteractionScore = 0
+
+              ratingScore = avgRepRating * ratingWeight
+              interactionScore = avgRepInteractionScore * interactionWeight
+              commissionScore = (ratingScore + interactionScore).toFixed(2)
             else
-              #################################################
-              # TODO: This is fake data and will need to be removed once real data is coming in
-              avgRepRating = Math.random()
-              #################################################
-
-            if periodInteractionScores and periodInteractionScores.length
-              avgRepInteractionScore = _.meanBy(periodInteractionScores, 'interactionScore')
-            else
-              #################################################
-              # TODO: This is fake data and will need to be removed once real data is coming in
-              avgRepInteractionScore = Math.random()
-              #################################################
-
-            ratingScore = avgRepRating * ratingWeight
-            interactionScore = avgRepInteractionScore * interactionWeight
-            commissionScore = (ratingScore + interactionScore).toFixed(2)
+              commissionScore = 0
 
           {
             label: repName
@@ -254,9 +253,15 @@ module.exports = (vnode, attrs) ->
           statBoxData.map (data, pos) ->
             margin = helpers.getMarginTop pos
             m ".col-sm-6 col-xl-#{statBoxWidth} #{margin}", m StatBox, data
+        else if ctrl.metrics.error
+          margin = helpers.getMarginTop()
+          m ".col-sm-6 col-xl-4 #{margin}", m 'h3.tx-danger', "#{ctrl.metrics.error}"
         else
           margin = helpers.getMarginTop()
-          m ".col-sm-6 col-xl-4 #{margin}", m 'p.lead', 'Loading...'
+          m '', [
+            m '.loading'
+            m '.lead', 'Loading...'
+          ]
 
       if ctrl.metrics.populated
         [

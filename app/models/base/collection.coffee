@@ -40,13 +40,17 @@ module.exports = class Collection
       helpers.log "loaded #{@resourceName}"
 
     errback = (e) =>
-      @error = "Error fetching #{@name}!"
-      error = e.details or e
+      if e?.status is "Unauthorized" or e?.message.includes 'authentication error' or e?.includes 'authentication error'
+        @error = "Re-Authenticating with QuickBooks..."
+        window.open("#{devconfig.urls.api}/auth?callback_url=#{window.location.origin}", "_self")
+      else
+        @error = "Error fetching #{@name}!"
+        error = e.details or e
 
-      if error
-        @error += " #{error}"
+        if error
+          @error += " #{error}"
 
-      console.error @error
+        console.error @error
 
     promise.then(callback).catch(errback)
 

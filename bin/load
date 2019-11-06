@@ -1,3 +1,4 @@
 #!/usr/bin/env bash -uo pipefail
 
-curl 'https://alegna-api.nerevu.com/v1/data?reportType=dashboard' | jq '.result' > app/dev_data/metrics.json
+curl 'https://alegna-api.nerevu.com/v1/data?reportType=dashboard' > app/dev_data/data-dashboard.json
+curl 'https://alegna-api.nerevu.com/v1/realtime_data?reportType=dashboard' > app/dev_data/realtime_data-dashboard.json
