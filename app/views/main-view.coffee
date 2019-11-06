@@ -115,16 +115,16 @@ module.exports = (vnode, attrs) ->
         datasets: reps.map (repName, pos) ->
           metric = ctrl.metrics.listByPeriodAndRep
           data = periods.map (period) ->
-            if not metric[period]?[repName]
-              commissionScore = 0
-            else
-              periodRatings = metric[period]?[repName]?.filter (metr) -> metr.rating
-              periodInteractionScores = metric[period]?[repName]?.filter (metr) -> metr.interactionScore
+            repMetrics = metric[period]?[repName]
 
-              ratingWeight = metric[period]?[repName]?[0].ratingWeight
-              interactionWeight = metric[period]?[repName]?[0].interactionWeight
+            if repMetrics
+              periodRatings = repMetrics.filter (_metric) -> _metric.rating
+              periodInteractionScores = repMetrics.filter (_metric) -> _metric.interactionScore
 
-              if periodRatings and periodRatings.length
+              ratingWeight = repMetrics[0].ratingWeight or 1
+              interactionWeight = repMetrics[0].interactionWeight or 1
+
+              if periodRatings?.length
                 avgRepRating = _.meanBy(periodRatings, 'rating')
               else
                 #################################################
@@ -132,7 +132,7 @@ module.exports = (vnode, attrs) ->
                 avgRepRating = Math.random()
                 #################################################
 
-              if periodInteractionScores and periodInteractionScores.length
+              if periodInteractionScores?.length
                 avgRepInteractionScore = _.meanBy(periodInteractionScores, 'interactionScore')
               else
                 #################################################
@@ -143,6 +143,8 @@ module.exports = (vnode, attrs) ->
               ratingScore = avgRepRating * ratingWeight
               interactionScore = avgRepInteractionScore * interactionWeight
               commissionScore = (ratingScore + interactionScore).toFixed(2)
+            else
+              commissionScore = 0
 
           {
             label: repName
