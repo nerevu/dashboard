@@ -127,18 +127,12 @@ module.exports = (vnode, attrs) ->
               if periodRatings?.length
                 avgRepRating = _.meanBy(periodRatings, 'rating')
               else
-                #################################################
-                # TODO: This is fake data and will need to be removed once real data is coming in
-                avgRepRating = Math.random()
-                #################################################
+                avgRepRating = 0
 
               if periodInteractionScores?.length
                 avgRepInteractionScore = _.meanBy(periodInteractionScores, 'interactionScore')
               else
-                #################################################
-                # TODO: This is fake data and will need to be removed once real data is coming in
-                avgRepInteractionScore = Math.random()
-                #################################################
+                avgRepInteractionScore = 0
 
               ratingScore = avgRepRating * ratingWeight
               interactionScore = avgRepInteractionScore * interactionWeight
