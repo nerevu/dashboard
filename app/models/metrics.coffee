@@ -56,8 +56,8 @@ module.exports = class Metrics extends Collection
 
     @categories = [
       {
-        id: 'sales'
-        title: 'Sales'
+        id: 'total sales'
+        title: 'Total Sales'
         property: 'amount'
         color: 'purple'
         backgroundColor: '#6f42c1'
