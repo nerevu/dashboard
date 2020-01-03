@@ -14,12 +14,12 @@ getStatDetails = (final, initial) ->
     diffValueText = '$0'
 
   {
-    value: final
+    value: parseFloat(final.toFixed 2)
     valueText: valueText
     difference:
-      value: absChange
+      value: parseFloat(absChange.toFixed 2)
       valueText: diffValueText
-      percent: perChange
+      percent: parseFloat(perChange.toFixed 2)
       percentText: perChange.toLocaleString('us-US', {style: 'percent'})
       color: if change > 0 then 'success' else 'danger'
       direction: if change > 0 then 'higher' else 'lower'

@@ -35,6 +35,6 @@ module.exports = class Metric
 
     @repPeriodSales = metric["Rep Period Sales"]
     @repPeriodUpsells = metric["Rep Period Upsells"]
-    @repPeriodWeightedAverageSales = metric["Rep Period Weighted Average Sales"]
+    @repPeriodWeightedAverageSales = parseFloat(metric["Rep Period Weighted Average Sales"].toFixed 2)
     @repPeriodWeightedSales = metric["Rep Period Weighted Sales"]
     @repPeriodWeightedUpsells = metric["Rep Period Weighted Upsells"]
