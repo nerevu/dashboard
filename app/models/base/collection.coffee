@@ -42,7 +42,9 @@ module.exports = class Collection
     errback = (e) =>
       if e?.status is "Unauthorized" or e?.message.includes 're-authenticate' or e?.includes 'authentication error'
         @error = "Re-Authenticating with QuickBooks..."
-        window.open("#{devconfig.urls.api}/auth?callback_url=#{window.location.origin}", "_self")
+        callbackUrl = devconfig.urls.app
+        authenticationUrl = "#{devconfig.urls.api}/auth?callback_url=#{callbackUrl}"
+        window.open(authenticationUrl, "_self")
       else
         @error = "Error fetching #{@name}!"
         error = e.details or e
