@@ -44,7 +44,6 @@ module.exports = class Collection
         @error = "Re-Authenticating with QuickBooks..."
         callbackUrl = devconfig.urls.app
         authenticationUrl = "#{devconfig.urls.api}/auth?callback_url=#{callbackUrl}"
-        console.log "Re-directing to #{authenticationUrl}"
         window.open(authenticationUrl, "_self")
       else
         @error = "Error fetching #{@name}!"
