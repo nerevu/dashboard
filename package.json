@@ -11,7 +11,7 @@
     "type": "git"
   },
   "engines": {
-    "node": "10.14.2",
+    "node": "12.16.x",
     "npm": "6.10.x"
   },
   "scripts": {
@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "body-parser": "^1.18.3",
-    "bootstrap": "^4.1.3",
+    "bootstrap": "^4.4.1",
     "brunch": "^2.10.17",
     "chart.js": "^2.7.3",
     "coffeescript": "^2.4.1",
@@ -34,11 +34,11 @@
     "connect-history-api-fallback": "^1.6.0",
     "connect-timeout": "^1.9.0",
     "express": "^4.16.3",
-    "helmet": "^3.12.1",
+    "helmet": "^3.22.0",
     "ionicons": "^2.0.1",
     "jquery": "^3.3.1",
     "lodash": "^4.17.11",
-    "mithril": "^1.1.6",
+    "mithril": "^1.1.7",
     "morgan": "^1.9.1",
     "prerender-node": "^3.2.0",
     "rickshaw": "^1.6.6",
@@ -56,7 +56,7 @@
     "json-brunch": "^1.5.4",
     "popper.js": "^1.15.0",
     "process-env-brunch": "git+https://github.com/mikeedwards/process-env-brunch.git#1d4dab5833e0",
-    "sass-brunch": "^2.10.8",
+    "sass-brunch": "^3.0.0",
     "terser-brunch": "^3.0.0",
     "cachebust-brunch": "git+https://github.com/reubano/cachebust-brunch.git#01c893e49fc"
   }
