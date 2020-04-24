@@ -9,7 +9,8 @@ module.exports = class Metric
     @costOfGoods = parseFloat metric["Cost of Goods"]
     @profit = parseFloat metric.Profit
     @commission = parseFloat metric["Commission Due"]
-    @invoiceDate = new Date metric["Invoice Date"]
+    @invoiceDateObj = new Date metric["Invoice Date"]
+    @invoiceDate = metric["Invoice Date"]
     @invoiceMonthNum = metric["Invoice Month Num"]
     @invoiceMonth = metric["Invoice Month"]
     @invoicePeriod = metric["Invoice Period"]
@@ -34,6 +35,6 @@ module.exports = class Metric
 
     @repPeriodSales = metric["Rep Period Sales"]
     @repPeriodUpsells = metric["Rep Period Upsells"]
-    @repPeriodWeightedAverageSales = metric["Rep Period Weighted Average Sales"]
+    @repPeriodWeightedAverageSales = parseFloat(metric["Rep Period Weighted Average Sales"].toFixed 2)
     @repPeriodWeightedSales = metric["Rep Period Weighted Sales"]
     @repPeriodWeightedUpsells = metric["Rep Period Weighted Upsells"]

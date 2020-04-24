@@ -14,12 +14,12 @@ getStatDetails = (final, initial) ->
     diffValueText = '$0'
 
   {
-    value: final
+    value: parseFloat(final.toFixed 2)
     valueText: valueText
     difference:
-      value: absChange
+      value: parseFloat(absChange.toFixed 2)
       valueText: diffValueText
-      percent: perChange
+      percent: parseFloat(perChange.toFixed 2)
       percentText: perChange.toLocaleString('us-US', {style: 'percent'})
       color: if change > 0 then 'success' else 'danger'
       direction: if change > 0 then 'higher' else 'lower'
@@ -56,8 +56,8 @@ module.exports = class Metrics extends Collection
 
     @categories = [
       {
-        id: 'sales'
-        title: 'Sales'
+        id: 'total sales'
+        title: 'Total Sales'
         property: 'amount'
         color: 'purple'
         backgroundColor: '#6f42c1'
@@ -113,7 +113,7 @@ module.exports = class Metrics extends Collection
     @populateListBy = =>
       @listPaid = @list.filter (metric) -> metric.paid
       @listByRep = _.groupBy _.orderBy(@listPaid, 'salesRep'), 'salesRep'
-      @listByPeriod = _.groupBy _.orderBy(@listPaid, 'invoiceDate'), 'invoicePeriod'
+      @listByPeriod = _.groupBy _.orderBy(@listPaid, 'invoiceDateObj'), 'invoicePeriod'
 
       for period, transactionList of @listByPeriod
         @listByPeriodAndRep[period] = _.groupBy transactionList, 'salesRep'
