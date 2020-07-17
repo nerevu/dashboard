@@ -25,33 +25,13 @@ getStatDetails = (final, initial) ->
       direction: if change > 0 then 'higher' else 'lower'
   }
 
-# https://stackoverflow.com/a/563442/408556
-subtractDays = (days) ->
-  newDate = new Date()
-  newDate.setDate(newDate.getDate() - days)
-  newDate
-
-formatDate = (date) ->
-  monthNum = date.getMonth() + 1
-
-  if monthNum < 10
-    monthNum = "0#{monthNum}"
-
-  "#{monthNum}-#{date.getFullYear()}"
-
-# Does this create what we want it to?
-DAYSRANGE = _.range 0, 28 * 13, 28
-
 module.exports = class Metrics extends Collection
   constructor: ->
     super Metric, 'data', 'dashboard'
     @listByRep = null
     @listByPeriod = null
+    @periods = null
     @listByPeriodAndRep = {}
-
-    # Create a range of dates representing each month for the past 12 months
-    @periods = _.uniq DAYSRANGE.map(subtractDays).map(formatDate)
-    @periods.reverse()
     @leaders = {}
 
     @categories = [
@@ -110,7 +90,7 @@ module.exports = class Metrics extends Collection
 
     @populate = (collections) =>
       @reps = Object.keys @listByRep
-      @availPeriods = Object.keys @listByPeriod
+      @periods = Object.keys @listByPeriod
 
       @periods.map (period, pos) =>
         stats = @listByPeriod[period]
@@ -124,7 +104,7 @@ module.exports = class Metrics extends Collection
           else
             final = 0
 
-          if pos and prevPeriod in @availPeriods
+          if pos and prevPeriod in @periods
             initial = @[category.id][prevPeriod].all.value
           else if pos
             initial = 0
@@ -144,7 +124,7 @@ module.exports = class Metrics extends Collection
             else
               final = 0
 
-            if pos and prevPeriod in @availPeriods
+            if pos and prevPeriod in @periods
               initial = @[category.id][prevPeriod][rep]?.value or 0
             else if pos
               initial = 0
