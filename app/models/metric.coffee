@@ -3,7 +3,6 @@ module.exports = class Metric
     @id = metric.id or id
     @paid = metric.Paid
     @invoiceNumber = metric["Invoice Number"]
-    @contractNumber = metric["Contract Number"]
     @invoiceSource = metric["Invoice Source"]
     @amount = parseFloat metric["Invoice Amount"]
     @costOfGoods = parseFloat metric["Cost of Goods"]

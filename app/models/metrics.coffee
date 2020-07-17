@@ -44,7 +44,7 @@ DAYSRANGE = _.range 0, 28 * 13, 28
 
 module.exports = class Metrics extends Collection
   constructor: ->
-    super Metric, 'realtime_data', 'dashboard'
+    super Metric, 'data', 'dashboard'
     @listByRep = null
     @listByPeriod = null
     @listByPeriodAndRep = {}
@@ -96,19 +96,6 @@ module.exports = class Metrics extends Collection
     ]
 
     @categories.forEach (category) => @[category.id] = {}
-
-    @visible =
-      xs: ['invoiceNumber', 'amount']
-      sm: ['invoiceNumber', 'amount', 'commission', 'salesRep']
-      md: ['invoiceNumber', 'amount', 'commission', 'invoiceDate', 'salesRep']
-      lg: [
-        'invoiceNumber', 'contractNumber', 'poNumbers', 'amount', 'commission',
-        'invoiceDate', 'salesRep'
-      ]
-      xl: [
-        'invoiceNumber', 'contractNumber', 'poNumbers', 'amount', 'commission',
-        'invoiceDate', 'invoicePeriod', 'salesRep', 'errors'
-      ]
 
     @populateListBy = =>
       @listPaid = @list.filter (metric) -> metric.paid

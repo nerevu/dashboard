@@ -13,7 +13,6 @@ module.exports = class Controller
   constructor: (attrs) ->
     @loaded = stream false
     @ready = stream false
-    @page = stream attrs.page
 
     @metrics = new Metrics()
     @collections = metrics: @metrics
@@ -21,7 +20,7 @@ module.exports = class Controller
     @head = document.getElementsByTagName('head')[0]
     @body = document.getElementsByTagName('body')[0]
 
-  update: (attrs) => @page attrs.page
+  update: (attrs) => true
 
   populate: =>
     Object.keys(@collections).forEach (name) =>

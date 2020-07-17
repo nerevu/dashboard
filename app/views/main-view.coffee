@@ -15,14 +15,6 @@ module.exports = (vnode, attrs) ->
   site = config.site
   colors = config.site.colors
   rows = ctrl.metrics.list
-  visible = ctrl.metrics.visible
-  #################################################
-  # TODO: remove this when better logic is created.
-  # For now, it declares the root path as the sales view
-  unless ctrl.page()
-    ctrl.page('sales')
-  #################################################
-
   year = (new Date()).getFullYear()
 
   if ctrl.metrics.populated
@@ -30,8 +22,6 @@ module.exports = (vnode, attrs) ->
     currentPeriod = periods[-1..]
     reps = ctrl.metrics.reps
     categories = ctrl.metrics.categories
-    if ctrl.page() isnt 'admin'
-      categories = ctrl.metrics.categories.filter (cat) -> cat.id isnt 'profit'
 
     upsellAndCategories = categories.filter (c) -> c.id not in ['periodWeightedAvgSales']
     limitedCategories = categories.filter (c) -> c.id not in ['periodWeightedAvgSales', 'periodUpsells']
@@ -68,9 +58,6 @@ module.exports = (vnode, attrs) ->
             borderWidth: 1
             fill: true
           }
-
-    if ctrl.page() isnt 'admin'
-      monthlyMetricsAttrs.description =  'Alegna Sales and Commissions Owed over the past 12 months'
 
     monthlyCommisionsAttrs =
       pos: 0
@@ -234,9 +221,6 @@ module.exports = (vnode, attrs) ->
   statBoxWidth = 4
   statBoxWidth = 4
   statCardsWidth = 3
-  if ctrl.page() isnt 'admin'
-    statBoxWidth = 6
-    statCardsWidth = 4
   #################################################
 
   [
@@ -292,25 +276,6 @@ module.exports = (vnode, attrs) ->
               margin = helpers.getMarginTop pos, {sm: 6, md: 4}
               m ".col-xs-12 col-sm-6 col-md-4 #{margin}", m StatCard, data
               m ".col-xs-12 col-sm-6 col-md-#{statCardsWidth} #{margin}", m StatCard, data
-
-          m '.row row-sm mg-t-40',
-            m '.col-sm-12',
-              if rows
-                headerValues = Object.keys rows[0]
-
-                m 'table.table table-hover table-bordered', [
-                  m 'thead.thead-colored thead-info',
-                    m 'tr', headerValues.map (value) ->
-                      hidden = helpers.getHidden value, visible
-                      m "th.#{hidden}", {'scope': 'col'}, value
-
-                  m 'tbody', rows.map (row) ->
-                    m 'tr', Object.entries(row).map ([key, value]) ->
-                      hidden = helpers.getHidden key, visible
-                      m "td.#{hidden}", value
-                ]
-              else
-                m 'p.lead', 'Loading...'
         ]
     ]
     m 'footer.br-footer', [
