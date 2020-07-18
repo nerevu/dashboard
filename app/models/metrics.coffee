@@ -36,20 +36,12 @@ module.exports = class Metrics extends Collection
 
     @categories = [
       {
-        id: 'total sales'
+        id: 'sales'
         title: 'Total Sales'
         property: 'amount'
         color: 'purple'
         backgroundColor: '#6f42c1'
         icon: 'bag'
-      }, {
-        id: 'periodUpsells'
-        title: 'Upsells'
-        property: 'periodUpsells'
-        color: 'info'
-        backgroundColor: '#30a2b7'
-        # TODO - find an icon
-        icon: 'ribbon-a'
       }, {
         id: 'profit'
         title: 'Profit'
@@ -90,17 +82,15 @@ module.exports = class Metrics extends Collection
 
     @populate = (collections) =>
       @reps = Object.keys @listByRep
-      @periods = Object.keys @listByPeriod
+      @periods = Object.keys(@listByPeriod)[..3]
 
       @periods.map (period, pos) =>
         stats = @listByPeriod[period]
         prevPeriod = if pos then @periods[pos - 1] else @periods[pos]
 
         @categories.forEach (category) =>
-          if category.property not in ['periodWeightedAvgSales', 'periodUpsells']
+          if category.property isnt 'periodWeightedAvgSales'
             final = _.sumBy stats, category.property
-          else if stats
-            final = stats[0]?.periodUpsells
           else
             final = 0
 
@@ -117,10 +107,8 @@ module.exports = class Metrics extends Collection
 
         Object.entries(statsByRep).map ([rep, repStats]) =>
           @categories.forEach (category) =>
-            if category.property not in ['periodWeightedAvgSales', 'periodUpsells']
+            if category.property isnt 'periodWeightedAvgSales'
               final = _.sumBy repStats, category.property
-            else if repStats
-              final = repStats[0]?.periodUpsells
             else
               final = 0
 

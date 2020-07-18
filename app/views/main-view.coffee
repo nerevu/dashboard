@@ -23,8 +23,7 @@ module.exports = (vnode, attrs) ->
     reps = ctrl.metrics.reps
     categories = ctrl.metrics.categories
 
-    upsellAndCategories = categories.filter (c) -> c.id not in ['periodWeightedAvgSales']
-    limitedCategories = categories.filter (c) -> c.id not in ['periodWeightedAvgSales', 'periodUpsells']
+    limitedCategories = categories.filter (c) -> c.id isnt 'periodWeightedAvgSales'
     statBoxData = limitedCategories.map (category) ->
       metric = ctrl.metrics[category.id]
       all = metric[currentPeriod].all
@@ -43,10 +42,10 @@ module.exports = (vnode, attrs) ->
     monthlyMetricsAttrs =
       pos: 0
       title: "Monthly Metrics (past 12 months)"
-      description: 'Alegna Sales, Profit, and Commissions Owed over the past 12 months'
+      description: 'Sales, Profit, and Commissions Owed'
       chartData:
         labels: periods
-        datasets: upsellAndCategories.map (category) ->
+        datasets: limitedCategories.map (category) ->
           metric = ctrl.metrics[category.id]
 
           {
@@ -76,71 +75,12 @@ module.exports = (vnode, attrs) ->
             fill: true
           }
 
-    monthlyWeightedSalesAttrs =
-      pos: 0
-      title: "Monthly Weighted Average Sales (past 12 months)"
-      description: 'Sales Rep Weighted Average Sales over the past 12 months'
-      chartData:
-        labels: periods
-        datasets: reps.map (repName, pos) ->
-          metric = ctrl.metrics.listByPeriodAndRep
-
-          {
-            label: repName
-            data: periods.map (period) -> metric[period]?[repName]?[0].repPeriodWeightedAverageSales or 0
-            backgroundColor: colors.rep[pos].hex
-            borderWidth: 1
-            fill: true
-          }
-
-    monthlyCommissionScoreAttrs =
-      pos: 0
-      title: "Monthly Commission Scores (past 12 months)"
-      description: 'Monthly Commission Scores for Alegna Sales Reps over the past 12 months'
-      chartData:
-        labels: periods
-        datasets: reps.map (repName, pos) ->
-          metric = ctrl.metrics.listByPeriodAndRep
-          data = periods.map (period) ->
-            repMetrics = metric[period]?[repName]
-
-            if repMetrics
-              periodRatings = repMetrics.filter (_metric) -> _metric.rating
-              periodInteractionScores = repMetrics.filter (_metric) -> _metric.interactionScore
-
-              ratingWeight = repMetrics[0].ratingWeight or 1
-              interactionWeight = repMetrics[0].interactionWeight or 1
-
-              if periodRatings?.length
-                avgRepRating = _.meanBy(periodRatings, 'rating')
-              else
-                avgRepRating = 0
-
-              if periodInteractionScores?.length
-                avgRepInteractionScore = _.meanBy(periodInteractionScores, 'interactionScore')
-              else
-                avgRepInteractionScore = 0
-
-              ratingScore = avgRepRating * ratingWeight
-              interactionScore = avgRepInteractionScore * interactionWeight
-              commissionScore = (ratingScore + interactionScore).toFixed(2)
-            else
-              commissionScore = 0
-
-          {
-            label: repName
-            data: data
-            backgroundColor: colors.rep[pos].hex
-            borderWidth: 1
-            fill: true
-          }
-
     infoCardsData = periods[-2..].map (period) ->
       cardsData = ctrl.metrics.leaders.sales?[period] or [{}, {}, {}]
       chartData = ensureMinLen(cardsData, 3, {})
 
       title: "Top Sales Reps for #{period}"
-      data: chartData[-3..].map (leader, pos) ->
+      data: chartData[...3].map (leader, pos) ->
         if leader.difference
           diff = leader.difference
 
@@ -159,7 +99,7 @@ module.exports = (vnode, attrs) ->
           }
 
     statCardsData = periods[-2..].map (period, periodPos) ->
-      upsellAndCategories.map (category, categoryPos) ->
+      limitedCategories.map (category, categoryPos) ->
         metric = ctrl.metrics[category.id][period]
         all = metric?.all
 
@@ -185,43 +125,6 @@ module.exports = (vnode, attrs) ->
               description: metric?[rep]?.valueText or "$0"
             }
         }
-
-    weightedAvgStatsData = periods[-2..].map (period, periodPos) ->
-      categories.map (category, categoryPos) ->
-        metric = ctrl.metrics[category.id][period]
-        all = metric?.all
-
-        {
-          id: "statCard#{category.title}#{periodPos}"
-          title: "Individual #{category.title}"
-          subTitle: "Sales Rep #{category.title} for #{period}"
-          period: period
-          description: "Sales Reps have total #{category.title} of #{all?.valueText or '$0'}"
-          color: colors.category[categoryPos].class
-          progressBarData: reps.map (rep, repPos) ->
-
-            if all
-              value = (metric?[rep]?.value or 0) / all.value
-              rounded = (Math.round value * 10) * 10
-            else
-              rounded = 0
-
-            {
-              color: colors.rep[repPos].class
-              title: rep
-              value: rounded
-              description: metric?[rep]?.valueText or "$0"
-            }
-        }
-
-
-
-  #################################################
-  # TODO: fix with better logic later
-  statBoxWidth = 4
-  statBoxWidth = 4
-  statCardsWidth = 3
-  #################################################
 
   [
     m '.br-pagetitle', [
@@ -236,7 +139,7 @@ module.exports = (vnode, attrs) ->
         if ctrl.metrics.populated
           statBoxData.map (data, pos) ->
             margin = helpers.getMarginTop pos
-            m ".col-sm-6 col-xl-#{statBoxWidth} #{margin}", m StatBox, data
+            m ".col-sm-6 col-xl-4 #{margin}", m StatBox, data
         else if ctrl.metrics.error
           margin = helpers.getMarginTop()
           m ".col-sm-6 col-xl-4 #{margin}", m 'h3.tx-danger', "#{ctrl.metrics.error}"
@@ -254,16 +157,12 @@ module.exports = (vnode, attrs) ->
           m '.row row-sm mg-t-20 d-none d-sm-flex', [
             m '.col-xl-6', m ChartVertical, Object.assign({id: 'vertMetrics'}, monthlyMetricsAttrs)
             m '.col-xl-6', m ChartVertical, Object.assign({id: 'vertCommisions'}, monthlyCommisionsAttrs)
-            m '.col-xl-6', m ChartVertical, Object.assign({id: 'vertWeightedSales'}, monthlyWeightedSalesAttrs)
-            m '.col-xl-6', m ChartVertical, Object.assign({id: 'vertCommissionScore'}, monthlyCommissionScoreAttrs)
           ]
 
           # visible xs
           m '.row row-sm mg-t-20 d-flex d-sm-none', [
             m '.col-xs-12', m ChartHorizontal, Object.assign({id: 'horzMetrics'}, monthlyMetricsAttrs)
             m '.col-xl-12', m ChartHorizontal, Object.assign({id: 'horzCommisions'}, monthlyCommisionsAttrs)
-            m '.col-xl-12', m ChartHorizontal, Object.assign({id: 'horzWeightedCommissions'}, monthlyWeightedSalesAttrs)
-            m '.col-xl-12', m ChartHorizontal, Object.assign({id: 'horzCommissionScore'}, monthlyCommissionScoreAttrs)
           ]
 
           m '.row row-sm mg-t-20',
@@ -275,7 +174,6 @@ module.exports = (vnode, attrs) ->
             m '.row row-sm mg-t-20', cardData.map (data, pos) ->
               margin = helpers.getMarginTop pos, {sm: 6, md: 4}
               m ".col-xs-12 col-sm-6 col-md-4 #{margin}", m StatCard, data
-              m ".col-xs-12 col-sm-6 col-md-#{statCardsWidth} #{margin}", m StatCard, data
         ]
     ]
     m 'footer.br-footer', [

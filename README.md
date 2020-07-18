@@ -1,7 +1,7 @@
-# Alegna Dashboard
+# Commissioner
 
 ## Getting Started
-1. Install NPM 
+1. Install NPM
     ```bash
     # LINUX
     sudo apt install npm

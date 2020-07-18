@@ -1,8 +1,8 @@
 {
   "author": "Reuben Cummings",
   "license": "MIT",
-  "name": "Alegna-Commissioner",
-  "description": "Alegna Commission Dashboard",
+  "name": "Commissioner",
+  "description": "Nerevu Commission Dashboard",
   "version": "0.10.1",
   "environment": "web",
   "homepage": "",

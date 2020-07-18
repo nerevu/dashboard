@@ -1,15 +1,15 @@
 try
   NODE_ENV = $PROCESS_ENV_NODE_ENV or 'development'
-  ALEGNA_DASH_DATA_SRC = $PROCESS_ENV_ALEGNA_DASH_DATA_SRC or 'local'
+  DASH_DATA_SRC = $PROCESS_ENV_DASH_DATA_SRC or 'local'
 catch
   NODE_ENV = process.env.NODE_ENV or 'development'
-  ALEGNA_DASH_DATA_SRC = process.env.ALEGNA_DASH_DATA_SRC or 'local'
+  DASH_DATA_SRC = process.env.DASH_DATA_SRC or 'local'
 
 debug =
   mobile: false
   production: NODE_ENV is 'production'
   staging: NODE_ENV is 'staging'
-  localFile: ALEGNA_DASH_DATA_SRC is 'local'
+  localFile: DASH_DATA_SRC is 'local'
   verbose: false
 
 time =
@@ -50,12 +50,12 @@ urls =
     api: "//nerevu-api.ngrok.io/v1" #localhost can't connect to quickbooks
 
   production:
-    app: "//alegna-dashboard.nerevu.com"
-    api: "//alegna-api.nerevu.com/v1"
+    app: "//dashboard.nerevu.com"
+    api: "//api.nerevu.com/v1"
 
   staging:
-    app: "//alegna-dashboard-stage.nerevu.com"
-    api: "//alegna-api-stage.nerevu.com/v1"
+    app: "//dashboard-stage.nerevu.com"
+    api: "//api-stage.nerevu.com/v1"
 
 ua = navigator?.userAgent
 mobileTerms = "(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|
