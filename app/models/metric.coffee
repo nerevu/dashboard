@@ -9,4 +9,3 @@ module.exports = class Metric
     @invoiceDate = metric["Invoice Date"]
     @invoicePeriod = metric["Invoice Period"]
     @salesRep = metric["Sales Rep"]
-

@@ -56,14 +56,6 @@ module.exports = class Metrics extends Collection
         color: 'warning'
         backgroundColor: '#F49917'
         icon: 'ribbon-a'
-      }, {
-        id: 'periodWeightedAvgSales'
-        title: 'Weighted Average Sales'
-        property: 'periodWeightedAvgSales'
-        color: 'primary'
-        backgroundColor: '#0c66c6'
-        # TODO - find an icon
-        icon: 'ribbon-a'
       }
     ]
 
