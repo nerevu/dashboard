@@ -93,7 +93,7 @@ if debug.staging
   verbose = debug.verbose
 else if debug.production
   environment = 'production'
-  dataSource = 'remote'
+  dataSource = if debug.localFile then 'local' else 'remote'
   verbose = false
 else
   environment = 'development'
