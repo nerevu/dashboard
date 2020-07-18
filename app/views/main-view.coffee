@@ -41,7 +41,7 @@ module.exports = (vnode, attrs) ->
 
     monthlyMetricsAttrs =
       pos: 0
-      title: "Monthly Metrics (past 12 months)"
+      title: "Monthly Metrics"
       description: 'Sales, Profit, and Commissions Owed'
       chartData:
         labels: periods
@@ -60,8 +60,8 @@ module.exports = (vnode, attrs) ->
 
     monthlyCommisionsAttrs =
       pos: 0
-      title: "Monthly Commissions (past 12 months)"
-      description: 'Sales Rep Commissions over the past 12 months'
+      title: "Monthly Commissions"
+      description: 'Sales Rep Commissions'
       chartData:
         labels: periods
         datasets: reps.map (repName, pos) ->
@@ -105,7 +105,7 @@ module.exports = (vnode, attrs) ->
 
         {
           id: "statCard#{category.title}#{periodPos}"
-          title: "Individual #{category.title}"
+          title: "Rep #{category.title}"
           subTitle: "Sales Rep #{category.title} for #{period}"
           period: period
           description: "Sales Reps have total #{category.title} of #{all?.valueText or '$0'}"
@@ -138,11 +138,11 @@ module.exports = (vnode, attrs) ->
       m '.row row-sm',
         if ctrl.metrics.populated
           statBoxData.map (data, pos) ->
-            margin = helpers.getMarginTop pos
-            m ".col-sm-6 col-xl-4 #{margin}", m StatBox, data
+            margin = helpers.getMarginTop pos, {sm: 12, md: 12, lg: 4}
+            m ".col-md-12 col-lg-4 #{margin}", m StatBox, data
         else if ctrl.metrics.error
           margin = helpers.getMarginTop()
-          m ".col-sm-6 col-xl-4 #{margin}", m 'h3.tx-danger', "#{ctrl.metrics.error}"
+          m ".col-md-12 col-lg-4 #{margin}", m 'h3.tx-danger', "#{ctrl.metrics.error}"
         else
           margin = helpers.getMarginTop()
           m '', [
@@ -155,8 +155,8 @@ module.exports = (vnode, attrs) ->
           # TODO: make these classes
           # hidden-xs
           m '.row row-sm mg-t-20 d-none d-sm-flex', [
-            m '.col-xl-6', m ChartVertical, Object.assign({id: 'vertMetrics'}, monthlyMetricsAttrs)
-            m '.col-xl-6', m ChartVertical, Object.assign({id: 'vertCommisions'}, monthlyCommisionsAttrs)
+            m '.col-sm-6', m ChartVertical, Object.assign({id: 'vertMetrics'}, monthlyMetricsAttrs)
+            m '.col-sm-6', m ChartVertical, Object.assign({id: 'vertCommisions'}, monthlyCommisionsAttrs)
           ]
 
           # visible xs
@@ -172,8 +172,8 @@ module.exports = (vnode, attrs) ->
 
           statCardsData.map (cardData) ->
             m '.row row-sm mg-t-20', cardData.map (data, pos) ->
-              margin = helpers.getMarginTop pos, {sm: 6, md: 4}
-              m ".col-xs-12 col-sm-6 col-md-4 #{margin}", m StatCard, data
+              margin = helpers.getMarginTop pos, {sm: 12, md: 4}
+              m ".col-sm-12 col-md-4 #{margin}", m StatCard, data
         ]
     ]
     m 'footer.br-footer', [

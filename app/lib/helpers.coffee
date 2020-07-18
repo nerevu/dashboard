@@ -86,6 +86,7 @@ module.exports =
   getMarginTop: (pos, opts) ->
     sm = opts?.sm or 6
     md = opts?.md or 6
+    lg = opts?.lg or 6
 
     if not pos
       return ''
@@ -97,6 +98,9 @@ module.exports =
 
     if (pos <= 2 and md is 4) or (pos <= 1 and md is 6) or (not pos and md is 12)
       margin += ' mg-md-t-0'
+
+    if (pos <= 2 and lg is 4) or (pos <= 1 and lg is 6) or (not pos and lg is 12)
+      margin += ' mg-lg-t-0'
 
     margin
 
